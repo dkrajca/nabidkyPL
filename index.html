@@ -15,8 +15,9 @@
   .catalog{margin:15px 0 0;padding:0;border:none}.catalog legend{margin-bottom:5px}.component{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border-top:1px solid #e1e8f0;padding:9px 0}.component label{display:flex;align-items:center;gap:9px;cursor:pointer}.component input{width:17px;height:17px;margin:0;accent-color:#204878}.component output{font-size:.88rem;font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}.hint{font-size:.86rem;color:var(--muted);margin-top:4px}.total{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:1px solid var(--line);padding-top:12px;margin-top:11px;font-weight:700}.total output{font-variant-numeric:tabular-nums}
   .preview{overflow:hidden;position:sticky;top:16px}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}button{background:var(--brand);border:1px solid var(--brand);color:#fff;border-radius:7px;padding:8px 12px;font-weight:750}button:hover{background:#073971}.paper-wrap{padding:20px;background:#e7eef6}.paper{background:white;padding:clamp(15px,3vw,34px);border:1px solid #ccd7e5;box-shadow:0 5px 12px #132a4820;min-height:485px;font-size:.87rem}.dochead{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:3px solid var(--brand);padding-bottom:13px}.docbrand img{display:block;width:115px;height:35px;object-fit:contain}.docbrand strong{display:block;margin-top:4px;font-size:.76rem}.dochead h3{color:var(--navy);font-size:clamp(1.2rem,2.5vw,1.65rem);line-height:1.15;text-align:right}.meta{display:grid;grid-template-columns:1fr 1fr;gap:11px 16px;margin:17px 0}.meta dt{color:var(--muted);font-size:.81rem}.meta dd{margin:1px 0 0;font-weight:650;overflow-wrap:anywhere}.doc-section{margin-top:19px}.doc-section h4{margin:0 0 5px;font-size:.93rem}.offer-table{width:100%;border-collapse:collapse;table-layout:fixed}.offer-table th,.offer-table td{border-bottom:1px solid var(--line);padding:7px 4px;vertical-align:top;overflow-wrap:anywhere}.offer-table th{background:var(--blue-soft);color:var(--navy);font-weight:700;text-align:left}.offer-table :is(th,td):not(:first-child){text-align:right}.offer-table col:first-child{width:44%}.offer-table col:nth-child(2){width:10%}.offer-table col:nth-child(3),.offer-table col:nth-child(4){width:23%}.offer-table td:first-child small{display:block;color:var(--muted);white-space:pre-wrap;font-size:.83rem;margin-top:4px}.doc-footer{border-top:1px solid var(--line);padding-top:11px;margin-top:23px;color:var(--muted);font-size:.84rem}.demo-watermark{font-weight:750;color:var(--brand);margin-top:4px}.status{margin-top:10px;color:#7e2d16;font-size:.9rem}.status:empty{display:none}
   @media(max-width:940px){.layout{grid-template-columns:1fr}.preview{position:static}.paper{min-height:0}.intro{align-items:start}}@media(max-width:475px){.masthead{padding:13px 14px}.identity{gap:6px}.locale>span{display:none}.fields{grid-template-columns:1fr}.panel{padding:15px}.paper-wrap{padding:9px}.paper{padding:12px}.offer-table th,.offer-table td{font-size:.79rem}.offer-table td:first-child small{font-size:.77rem}}
+  .tabs,.actions,.product-picker,.groups{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.tabs{margin:0 0 16px}.secondary{background:white;color:var(--brand);border-color:#adc2dd}.secondary:hover{background:var(--blue-soft)}.tabs .secondary[aria-pressed="true"],.groups button[aria-pressed="true"]{background:var(--brand);color:white}.groups{margin:12px 0}.product-picker label{flex:1 1 170px}.product-picker button{align-self:end}.group-fields{border:0;padding:0;margin:0;min-width:0}.part-price{min-width:105px;width:100%;font-size:.85rem}.component .part-price input{width:100%;height:auto;margin:0}.component{grid-template-columns:minmax(0,1fr) minmax(106px,30%)}.component small{display:block;color:var(--muted);font-size:.78rem}.demo-contact{margin-top:12px}.list{display:grid;gap:8px;margin-top:12px}.record{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px;border:1px solid var(--line);border-radius:7px}.record small{display:block;color:var(--muted);font-size:.86rem}.record .actions button{font-size:.85rem}.total strong{color:var(--brand)}.summary{background:var(--blue-soft);padding:12px;border-radius:7px;margin-top:10px}.summary .total{margin-top:5px;padding-top:5px}.pending{color:#7e2d16}.doc-totals{margin-top:9px;display:grid;gap:4px}.doc-totals p{display:flex;justify-content:space-between;gap:8px}.paper tr{break-inside:avoid}.toolbar{flex-wrap:wrap}button:disabled{opacity:.55;cursor:not-allowed}.empty{color:var(--muted);padding:8px 0}.panel .actions{margin-top:12px}
   @page{size:A4;margin:17mm}
-  @media print{body,main,.paper-wrap,.paper{background:#fff}.masthead,.intro,.editor,.toolbar{display:none!important}main,.layout,.preview,.paper-wrap,.paper{display:block;position:static;margin:0;padding:0;max-width:none;width:100%;min-height:0;border:0;box-shadow:none;overflow:visible}.paper{font-size:10pt;print-color-adjust:exact}.dochead,.meta,.doc-section,.doc-footer{break-inside:avoid}.dochead h3{font-size:18pt}}
+  @media print{body,main,.paper-wrap,.paper{background:#fff}.masthead,.intro,.tabs,.editor,.toolbar,.status,.history{display:none!important}main,.layout,.preview,.paper-wrap,.paper{display:block;position:static;margin:0;padding:0;max-width:none;width:100%;min-height:0;border:0;box-shadow:none;overflow:visible}.paper{font-size:10pt;print-color-adjust:exact}.dochead,.meta,.doc-totals,.doc-footer{break-inside:avoid}.dochead h3{font-size:18pt}body[data-printable="false"] main{display:none!important}}
 </style>
 </head>
 <body>
@@ -25,32 +26,60 @@
   <label class="locale"><span data-t="language">Język interfejsu</span><select id="language"><option value="pl">PL · Polski</option><option value="cs">CZ · Čeština</option></select></label>
 </header>
 <main>
-  <div class="intro"><div><h1 data-t="title">Generator ofert GX Fleet</h1><p data-t="demo">Prototyp z przykładowymi klientami i cenami.</p></div></div>
-  <div class="layout">
+  <div class="intro"><div><h1 data-t="title">Generator ofert GX</h1><p data-t="demo">Prototyp z przykładowymi klientami i cenami.</p></div></div>
+  <nav class="tabs"><button type="button" id="new-tab" class="secondary" data-t="newQuote" aria-pressed="true"></button><button type="button" id="history-tab" class="secondary" data-t="history" aria-pressed="false"></button></nav>
+  <section class="panel history" id="history-view" hidden>
+    <h2 data-t="history"></h2>
+    <label><span data-t="client"></span><select id="history-client"></select></label>
+    <p class="hint" data-t="historyHint"></p>
+    <div class="list" id="history-list"></div>
+  </section>
+  <div class="layout" id="builder">
     <form class="editor" id="editor">
+      <section class="panel" aria-labelledby="product-heading">
+        <h2 id="product-heading" data-t="product"></h2>
+        <div class="product-picker"><label><span data-t="pickProduct"></span><select id="product"></select></label><button id="add-product" type="button" class="secondary" data-t="addProduct"></button></div>
+      </section>
       <section class="panel" aria-labelledby="client-heading"><h2 id="client-heading" data-t="clientSection">Klient i oferta</h2>
         <div class="fields">
           <label class="wide"><span data-t="client">Klient</span><select id="client"><option value="alpha">Demo Logistics Sp. z o.o.</option><option value="beta">Demo Transport s.r.o.</option><option value="custom" data-t="custom">Wpisz klienta</option></select></label>
           <label class="wide" id="custom-client" hidden><span data-t="company">Nazwa firmy</span><input id="company" maxlength="120" autocomplete="organization"></label>
           <label><span data-t="tax">NIP / IČO</span><input id="tax" maxlength="30"></label>
-          <label><span data-t="number">Numer oferty</span><input id="number" maxlength="40" value="DEMO-FLEET-001" required></label>
+          <div class="actions" id="lookup-controls" hidden><button id="nip-lookup" class="secondary" type="button" data-t="lookup"></button></div>
+          <label class="wide"><span data-t="address"></span><input id="address" maxlength="240" autocomplete="street-address"></label>
+          <div class="wide" id="new-client-actions" hidden><div class="actions"><button id="save-client" class="secondary" type="button" data-t="saveClient"></button></div><p id="client-status" class="hint" role="status"></p></div>
+          <label><span data-t="number">Numer oferty</span><input id="number" maxlength="40" readonly></label>
           <label><span data-t="validity">Ważna do</span><input id="date" type="date" required></label>
           <label><span data-t="currency">Waluta</span><select id="currency"><option>PLN</option><option>CZK</option></select></label>
           <label><span data-t="quoteLanguage">Język oferty</span><select id="quote-language"><option value="pl">PL · Polski</option><option value="cs">CZ · Čeština</option></select></label>
+          <label><span data-t="salesperson"></span><select id="salesperson"><option>Demo Sales 1</option><option>Demo Sales 2</option></select></label>
         </div>
+        <div class="demo-contact" id="client-history"><h3 data-t="clientHistory"></h3><div class="list" id="customer-records"></div></div>
       </section>
-      <section class="panel" aria-labelledby="install-heading"><h2 id="install-heading" data-t="installation">Konfiguracja montażu</h2>
+      <section class="panel" id="configuration" aria-labelledby="install-heading" hidden><h2 id="install-heading" data-t="installation">Konfiguracja produktu</h2>
+        <div class="groups" id="groups"></div>
+        <fieldset class="group-fields" id="group-fields" hidden>
         <div class="fields">
           <label><span data-t="vehicle">Pojazd / oznaczenie</span><input id="vehicle" maxlength="85" placeholder="np. Škoda Octavia"></label>
           <label><span data-t="qty">Liczba pojazdów</span><input id="quantity" type="number" min="1" max="999" step="1" value="1" required></label>
         </div>
         <fieldset class="catalog"><legend class="field-label" data-t="components">Komponenty na pojazd (wewnętrzne)</legend><div id="components"></div></fieldset>
-        <div class="total"><span data-t="unitTotal">Cena montażu za pojazd</span><output id="unit-total"></output></div>
-      </section>
-      <section class="panel" aria-labelledby="scope-heading"><h2 id="scope-heading" data-t="scope">Zakres dla klienta</h2>
+        <div class="total"><span data-t="unitTotal">Cena za jednostkę</span><output id="unit-total"></output></div>
         <label><span data-t="description">Opis dostarczanych funkcji</span><textarea id="description" maxlength="320"></textarea></label>
         <label class="component"><span data-t="includeService">Dodaj miesięczny abonament</span><input type="checkbox" id="service-enabled" checked></label>
-        <div id="service-field"><label><span data-t="servicePerVehicle">Miesięcznie za pojazd</span><input id="service-price" type="number" min="0" max="999999" step="0.01" value="35" required></label></div>
+        <div id="service-field"><label><span data-t="servicePerVehicle">Miesięcznie za jednostkę</span><input id="service-price" type="number" min="0" step="0.01" required></label></div>
+        <div class="actions"><button id="remove-product" class="secondary" type="button" data-t="removeProduct"></button></div>
+        </fieldset>
+      </section>
+      <section class="panel" aria-labelledby="discount-heading"><h2 id="discount-heading" data-t="discount"></h2>
+        <label><span data-t="discountAmount"></span><input id="discount" type="number" min="0" step="0.01" value="0" required></label>
+        <div class="summary">
+          <div class="total"><span data-t="minimum"></span><output id="quote-min"></output></div>
+          <div class="total"><span data-t="netTotal"></span><output id="quote-total"></output></div>
+          <p id="approval-note" class="hint pending"></p>
+        </div>
+        <div class="actions"><button id="save" type="button" data-t="save"></button><button id="reset" type="button" class="secondary" data-t="reset"></button></div>
+        <p id="save-status" class="status" role="status"></p>
       </section>
     </form>
     <section class="preview" aria-labelledby="preview-heading">
@@ -60,12 +89,14 @@
         <dl class="meta">
           <div><dt data-t="client">Klient</dt><dd id="pdf-client"></dd></div><div><dt data-t="number">Numer oferty</dt><dd id="pdf-number"></dd></div>
           <div><dt data-t="tax">NIP / IČO</dt><dd id="pdf-tax"></dd></div><div><dt data-t="validity">Ważna do</dt><dd id="pdf-date"></dd></div>
+          <div class="wide" id="pdf-address-row" hidden><dt data-t="address"></dt><dd id="pdf-address"></dd></div>
         </dl>
         <section class="doc-section"><h4 data-t="oneTime">Opłaty jednorazowe</h4>
-          <table class="offer-table"><colgroup><col><col><col><col></colgroup><thead><tr><th scope="col" data-t="item">Pozycja</th><th scope="col" data-t="count">Ilość</th><th scope="col" data-t="unitPrice">Cena jedn.</th><th scope="col" data-t="subtotal">Razem</th></tr></thead><tbody><tr><td><strong id="pdf-item"></strong><small id="pdf-description"></small></td><td id="pdf-qty"></td><td id="pdf-unit"></td><td id="pdf-total"></td></tr></tbody></table>
+          <table class="offer-table"><colgroup><col><col><col><col></colgroup><thead><tr><th scope="col" data-t="item">Pozycja</th><th scope="col" data-t="count">Ilość</th><th scope="col" data-t="unitPrice">Cena jedn.</th><th scope="col" data-t="subtotal">Razem</th></tr></thead><tbody id="pdf-items"></tbody></table>
+          <div class="doc-totals"><p id="pdf-discount-row" hidden><span data-t="discount"></span><strong id="pdf-discount"></strong></p><p><span data-t="netTotal"></span><strong id="pdf-total"></strong></p></div>
         </section>
         <section class="doc-section" id="pdf-service"><h4 data-t="monthly">Opłaty miesięczne</h4>
-          <table class="offer-table"><colgroup><col><col><col><col></colgroup><thead><tr><th scope="col" data-t="item">Pozycja</th><th scope="col" data-t="count">Ilość</th><th scope="col" data-t="unitPrice">Cena jedn.</th><th scope="col" data-t="subtotal">Razem</th></tr></thead><tbody><tr><td data-t="service">Abonament GX Fleet</td><td id="pdf-service-qty"></td><td id="pdf-service-unit"></td><td id="pdf-service-total"></td></tr></tbody></table>
+          <table class="offer-table"><colgroup><col><col><col><col></colgroup><thead><tr><th scope="col" data-t="item">Pozycja</th><th scope="col" data-t="count">Ilość</th><th scope="col" data-t="unitPrice">Cena jedn.</th><th scope="col" data-t="subtotal">Razem</th></tr></thead><tbody id="pdf-services"></tbody></table>
         </section>
         <footer class="doc-footer"><p data-t="vat">Ceny netto, bez VAT.</p><p class="demo-watermark" data-t="demoPdf">Wersja demonstracyjna. Ceny przykładowe.</p></footer>
       </article><p id="status" class="status" role="status"></p></div>
@@ -73,134 +104,537 @@
   </div>
 </main>
 <script>
-  'use strict';
-  const copy = {
-    pl: {language:'Język interfejsu',quoteLanguage:'Język oferty',title:'Generator ofert GX Fleet',demo:'Prototyp z przykładowymi klientami i cenami.',clientSection:'Klient i oferta',client:'Klient',custom:'Wpisz klienta',company:'Nazwa firmy',tax:'NIP / IČO',number:'Numer oferty',validity:'Ważna do',currency:'Waluta',installation:'Konfiguracja montażu',vehicle:'Pojazd / oznaczenie',qty:'Liczba pojazdów',components:'Komponenty na pojazd (wewnętrzne)',unitTotal:'Cena montażu za pojazd',scope:'Zakres dla klienta',description:'Opis funkcji w języku oferty',includeService:'Dodaj miesięczny abonament',servicePerVehicle:'Miesięcznie za pojazd',preview:'Podgląd oferty',pdf:'Zapisz jako PDF',quote:'Oferta cenowa',oneTime:'Opłaty jednorazowe',monthly:'Opłaty miesięczne',item:'Pozycja',count:'Ilość',unitPrice:'Cena jedn.',subtotal:'Razem',service:'Abonament GX Fleet',vat:'Ceny netto, bez VAT.',demoPdf:'Wersja demonstracyjna. Ceny przykładowe.',package:'Montaż systemu GX Fleet w pojeździe',defaultDescription:'Lokalizacja GPS i elektroniczna ewidencja przebiegu pojazdu.',pickComponent:'Wybierz co najmniej jeden komponent.',replaceCurrency:'Zmieniono przykładowy cennik i domyślną kwotę abonamentu.'},
-    cs: {language:'Jazyk aplikace',quoteLanguage:'Jazyk nabídky',title:'Generátor nabídek GX Fleet',demo:'Prototyp s ukázkovými klienty a cenami.',clientSection:'Klient a nabídka',client:'Klient',custom:'Zadat klienta',company:'Název firmy',tax:'IČO / NIP',number:'Číslo nabídky',validity:'Platnost do',currency:'Měna',installation:'Konfigurace osazení',vehicle:'Vozidlo / označení',qty:'Počet vozidel',components:'Komponenty na vozidlo (interní)',unitTotal:'Cena osazení za vozidlo',scope:'Rozsah dodávky pro klienta',description:'Popis funkcí v jazyce nabídky',includeService:'Přidat měsíční paušál',servicePerVehicle:'Měsíčně za vozidlo',preview:'Náhled nabídky',pdf:'Uložit jako PDF',quote:'Cenová nabídka',oneTime:'Jednorázové platby',monthly:'Měsíční platby',item:'Položka',count:'Počet',unitPrice:'Cena za kus',subtotal:'Celkem',service:'Servisní program GX Fleet',vat:'Ceny jsou uvedeny bez DPH.',demoPdf:'Ukázková nabídka. Testovací ceny.',package:'Osazení vozidla systémem GX Fleet',defaultDescription:'GPS lokalizace a elektronická kniha jízd.',pickComponent:'Vyber alespoň jednu komponentu.',replaceCurrency:'Přepnul se ukázkový ceník a výchozí částka měsíčního paušálu.'}
-  };
-  const clients = {
-    alpha:{name:'Demo Logistics Sp. z o.o.', tax:'DEMO-PL-001'},
-    beta:{name:'Demo Transport s.r.o.', tax:'DEMO-CZ-002'}
-  };
-  // Demo unit prices in minor currency units. Each currency has an independent price list.
-  const catalog = [
-    {id:'unit',pl:'Jednostka GPS',cs:'GPS jednotka',PLN:42000,CZK:250000,selected:true},
-    {id:'gsm',pl:'Moduł GSM',cs:'GSM modul',PLN:9000,CZK:55000,selected:true},
-    {id:'wiring',pl:'Wiązka i materiały',cs:'Kabeláž a materiál',PLN:7500,CZK:46000,selected:true},
-    {id:'installation',pl:'Montaż i uruchomienie',cs:'Montáž a zprovoznění',PLN:21500,CZK:130000,selected:true},
-    {id:'ignition',pl:'Podłączenie sygnału zapłonu',cs:'Připojení signálu zapalování',PLN:11000,CZK:66000,selected:false}
-  ];
-  const serviceDefaults = {PLN:35,CZK:220};
-  const el = (id) => document.getElementById(id);
-  const put = (id, value) => { el(id).textContent = value; };
-  const language = () => el('language').value;
-  const quoteLanguage = () => el('quote-language').value;
-  const currency = () => el('currency').value;
-  const money = (minor, lang) => new Intl.NumberFormat(lang === 'pl' ? 'pl-PL' : 'cs-CZ', {style:'currency',currency:currency()}).format(minor / 100);
-  const localeDate = (value, lang) => value ? new Intl.DateTimeFormat(lang, {dateStyle:'medium',timeZone:'UTC'}).format(new Date(value + 'T00:00:00Z')) : '—';
-  const descriptions = {pl:copy.pl.defaultDescription,cs:copy.cs.defaultDescription};
-
-  for (const component of catalog) {
-    const row = document.createElement('div');
-    row.className = 'component';
-    const label = document.createElement('label');
-    const checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.id = 'part-' + component.id;
-    checkbox.checked = component.selected;
-    const name = document.createElement('span');
-    name.id = 'name-' + component.id;
-    const price = document.createElement('output');
-    price.id = 'price-' + component.id;
-    label.append(checkbox, name);
-    row.append(label, price);
-    el('components').append(row);
+'use strict';
+const words = {
+  pl: {
+    language:'Język interfejsu',quoteLanguage:'Język oferty',title:'Generator ofert GX',demo:'Demo. Używaj przykładowych danych. Historia jest zapisywana tylko w tej przeglądarce.',
+    clientSection:'Klient i oferta',client:'Klient',custom:'Dodaj klienta',company:'Nazwa firmy',tax:'NIP / IČO',number:'Numer oferty',validity:'Ważna do',currency:'Waluta',
+    installation:'Konfiguracja produktu',vehicle:'Model / oznaczenie',qty:'Liczba jednostek',components:'Komponenty i ceny za jednostkę',unitTotal:'Cena za jednostkę',description:'Opis funkcji w języku oferty',
+    includeService:'Dodaj miesięczny abonament',servicePerVehicle:'Miesięcznie za jednostkę',preview:'Podgląd oferty',pdf:'Zapisz jako PDF',quote:'Oferta cenowa',
+    oneTime:'Opłaty jednorazowe',monthly:'Opłaty miesięczne',item:'Pozycja',count:'Ilość',unitPrice:'Cena jedn.',subtotal:'Razem',service:'Abonament',
+    vat:'Ceny netto, bez VAT.',demoPdf:'Wersja demonstracyjna. Ceny przykładowe.',newQuote:'Nowa oferta',history:'Historia',historyHint:'Historia lokalna. Zatwierdzanie zniżek jest symulacją.',
+    salesperson:'Handlowiec (demo)',clientHistory:'Poprzednie oferty klienta',product:'Produkt',addProduct:'Dodaj produkt',removeProduct:'Usuń pozycję',pickProduct:'Wybierz produkt',
+    minPart:'Minimum',sellPrice:'Cena ofertowa',discount:'Rabat',discountAmount:'Łączny rabat jednorazowy',minimum:'Minimum jednorazowe',netTotal:'Razem jednorazowo netto',
+    below:'Cena końcowa jest poniżej minimum. Oferta wymaga zgody kierownika.',invalidDiscount:'Rabat nie może przekraczać wartości jednorazowej oferty.',
+    save:'Zapisz ofertę',request:'Zapisz do zatwierdzenia',saved:'Oferta zapisana.',pending:'Oczekuje na zatwierdzenie',approved:'Rabat zatwierdzony (demo)',
+    ready:'Zapisana',approve:'Zatwierdź (demo kierownika)',duplicate:'Kopiuj',none:'Brak ofert dla tego klienta.',all:'Wszyscy klienci',noProducts:'Wybierz produkt i jego komponenty.',
+    pricingError:'Sprawdź ilości i ceny. Cena komponentu nie może być niższa od minimum.',storageError:'Nie udało się zapisać historii w tej przeglądarce.',
+    copied:'Kopia zawiera wcześniejsze ceny, z uwzględnieniem obecnego minimum. Rabat wymagający zgody jest oceniany ponownie.',
+    currencyChanged:'Zmieniono walutę. Ceny i rabat wróciły do wartości domyślnych dla nowej waluty.',units:'jedn.',reset:'Zacznij od nowa',discard:'Porzucić niezapisaną ofertę?',
+    address:'Adres firmy',lookup:'Pobierz dane po NIP',saveClient:'Zapisz klienta',clientSaved:'Klient zapisany w tej przeglądarce.',
+    invalidNip:'Sprawdź polski NIP. Powinien mieć 10 cyfr i poprawną cyfrę kontrolną.',looking:'Sprawdzam oficjalny wykaz VAT…',
+    found:'Dane z oficjalnego wykazu VAT. Sprawdź adres przed zapisaniem.',notFound:'Brak firmy w wykazie VAT dla tego NIP. Możesz wpisać dane ręcznie.',
+    lookupError:'Wykaz VAT jest chwilowo niedostępny. Spróbuj ponownie lub wpisz dane ręcznie.'
+  },
+  cs: {
+    language:'Jazyk aplikace',quoteLanguage:'Jazyk nabídky',title:'Generátor nabídek GX',demo:'Demo. Používej ukázková data. Historie se ukládá jen v tomto prohlížeči.',
+    clientSection:'Klient a nabídka',client:'Klient',custom:'Přidat klienta',company:'Název firmy',tax:'IČO / NIP',number:'Číslo nabídky',validity:'Platnost do',currency:'Měna',
+    installation:'Konfigurace produktu',vehicle:'Model / označení',qty:'Počet jednotek',components:'Komponenty a ceny za jednotku',unitTotal:'Cena za jednotku',description:'Popis funkcí v jazyce nabídky',
+    includeService:'Přidat měsíční paušál',servicePerVehicle:'Měsíčně za jednotku',preview:'Náhled nabídky',pdf:'Uložit jako PDF',quote:'Cenová nabídka',
+    oneTime:'Jednorázové platby',monthly:'Měsíční platby',item:'Položka',count:'Počet',unitPrice:'Cena za kus',subtotal:'Celkem',service:'Měsíční paušál',
+    vat:'Ceny jsou uvedeny bez DPH.',demoPdf:'Ukázková nabídka. Testovací ceny.',newQuote:'Nová nabídka',history:'Historie',historyHint:'Historie v tomto prohlížeči. Schválení slevy je simulace.',
+    salesperson:'Obchodník (demo)',clientHistory:'Předchozí nabídky klienta',product:'Produkt',addProduct:'Přidat produkt',removeProduct:'Odebrat položku',pickProduct:'Vyber produkt',
+    minPart:'Minimum',sellPrice:'Prodejní cena',discount:'Sleva',discountAmount:'Celková jednorázová sleva',minimum:'Jednorázová minimální cena',netTotal:'Jednorázově celkem bez DPH',
+    below:'Výsledná cena je pod minimem. Nabídka vyžaduje schválení vedoucím.',invalidDiscount:'Sleva nesmí překročit jednorázovou hodnotu nabídky.',
+    save:'Uložit nabídku',request:'Uložit ke schválení',saved:'Nabídka uložena.',pending:'Čeká na schválení',approved:'Sleva schválena (demo)',
+    ready:'Uložená',approve:'Schválit (demo vedoucího)',duplicate:'Zkopírovat',none:'Pro tohoto klienta tu zatím nejsou nabídky.',all:'Všichni klienti',noProducts:'Vyber produkt a jeho komponenty.',
+    pricingError:'Zkontroluj množství a ceny. Cena komponenty nesmí být pod minimem.',storageError:'Historii se v tomto prohlížeči nepodařilo uložit.',
+    copied:'Kopie přebírá původní ceny s ohledem na aktuální minimum. Sleva pod minimem potřebuje nové schválení.',
+    currencyChanged:'Při změně měny se ceny a sleva obnovily na výchozí hodnoty pro novou měnu.',units:'jedn.',reset:'Začít novou',discard:'Zahodit neuloženou nabídku?',
+    address:'Adresa firmy',lookup:'Načíst údaje podle NIP',saveClient:'Uložit klienta',clientSaved:'Klient uložen v tomto prohlížeči.',
+    invalidNip:'Zkontroluj polské NIP. Má mít 10 číslic a platnou kontrolní číslici.',looking:'Ověřuji oficiální registr DPH…',
+    found:'Údaje z oficiálního registru DPH. Před uložením zkontroluj adresu.',notFound:'Pro toto NIP se v registru DPH firma nenašla. Údaje můžeš doplnit ručně.',
+    lookupError:'Registr DPH je momentálně nedostupný. Zkus to znovu nebo údaje doplň ručně.'
   }
+};
 
-  function updateClient() {
-    const client = clients[el('client').value];
-    el('tax').value = client?.tax ?? '';
-    el('custom-client').hidden = Boolean(client);
-    el('company').required = !client;
+// The public demonstration uses sample prices in minor currency units.
+const parts = {
+  gps:['Jednostka GPS','GPS jednotka',42000,250000],
+  gsm:['Moduł GSM','GSM modul',9000,55000],
+  wiring:['Wiązka i materiały','Kabeláž a materiál',7500,46000],
+  install:['Montaż i uruchomienie','Montáž a zprovoznění',21500,130000],
+  can:['Interfejs CAN','CAN rozhraní',16000,96000],
+  fuel:['Czujnik paliwa','Snímač paliva',29000,174000],
+  rugged:['Wzmocniona jednostka GPS','Odolná GPS jednotka',56000,336000],
+  hours:['Pomiar motogodzin','Měření motohodin',12000,72000],
+  reader:['Czytnik RFID','RFID čtečka',22000,132000],
+  impact:['Czujnik uderzeń','Snímač nárazů',18000,108000],
+  uwb:['Moduł UWB','UWB modul',89000,534000],
+  projection:['Projektor ostrzegawczy','Výstražný projektor',105000,630000],
+  custom:['Pozycja dodatkowa','Ostatní položka',10000,60000]
+};
+const products = {
+  fleet:{name:'GX Fleet',scope:['Montaż systemu GX Fleet w pojeździe','Osazení vozidla systémem GX Fleet'],parts:['gps','gsm','wiring','install','can']},
+  truck:{name:'GX Truck',scope:['Montaż systemu GX Truck w ciężarówce','Osazení nákladního vozidla systémem GX Truck'],parts:['gps','gsm','can','fuel','wiring','install']},
+  build:{name:'GX Build',scope:['Montaż systemu GX Build na maszynie','Osazení stroje systémem GX Build'],parts:['rugged','gsm','hours','fuel','wiring','install']},
+  store:{name:'GX Store',scope:['Montaż systemu GX Store na wózku','Osazení vozíku systémem GX Store'],parts:['gps','reader','impact','can','wiring','install']},
+  safety:{name:'GX ActiveSafety',scope:['Wdrożenie GX ActiveSafety','Realizace GX ActiveSafety'],parts:['uwb','projection','reader','wiring','install']},
+  other:{name:['Pozostałe','Ostatní'],scope:['Zakres dodatkowy','Ostatní dodávka'],parts:['custom','wiring','install']}
+};
+const initialClients = [
+  {name:'Demo Logistics Sp. z o.o.',tax:'DEMO-PL-001'},
+  {name:'Demo Transport s.r.o.',tax:'DEMO-CZ-002'}
+];
+const el = id => document.getElementById(id);
+const put = (id,value) => { el(id).textContent=value; };
+const uiLang = () => el('language').value;
+const quoteLang = () => el('quote-language').value;
+const currency = () => el('currency').value;
+const loc = (value,lang) => Array.isArray(value) ? value[lang==='pl' ? 0 : 1] : value;
+const t = key => words[uiLang()][key];
+const money = (amount,lang=uiLang(),code=currency()) => new Intl.NumberFormat(lang,{style:'currency',currency:code}).format(amount/100);
+const dateText = (value,lang=uiLang()) => value ? new Intl.DateTimeFormat(lang,{dateStyle:'medium',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z')) : '—';
+const minimum = (id,code=currency()) => parts[id][code==='PLN' ? 2 : 3];
+const monthDefault = () => currency()==='PLN' ? 3500 : 22000;
+const storageKey = 'gx-quotes-demo-v2';
+const clientsKey = 'gx-clients-demo-v1';
+const today = (offset=0) => {
+  const value = new Date();
+  value.setDate(value.getDate()+offset);
+  return [value.getFullYear(),String(value.getMonth()+1).padStart(2,'0'),String(value.getDate()).padStart(2,'0')].join('-');
+};
+let records;
+try { records=JSON.parse(localStorage.getItem(storageKey)) ?? []; } catch { records=[]; }
+if (!Array.isArray(records)) records=[];
+let savedClients;
+try {savedClients=JSON.parse(localStorage.getItem(clientsKey)) ?? [];} catch {savedClients=[];}
+if (!Array.isArray(savedClients)) savedClients=[];
+let lookupTimer;
+let lookupRequest;
+let groups=[];
+let selected=-1;
+let lastSaved=null;
+let view='builder';
+let currentCurrency=currency();
+
+function element(tag,text,className) {
+  const node=document.createElement(tag);
+  if (text!==undefined) node.textContent=text;
+  if (className) node.className=className;
+  return node;
+}
+function action(text,handler) {
+  const node=element('button',text,'secondary');
+  node.type='button';
+  node.addEventListener('click',handler);
+  return node;
+}
+function amount(input) {
+  const n=Math.round(input.valueAsNumber*100);
+  return input.validity.valid && Number.isSafeInteger(n) ? n : null;
+}
+function norm(value) { return value.trim().normalize('NFKC').toLowerCase().replace(/[\s-]+/g,''); }
+function clientKey(client) { return client.tax ? 'tax:'+norm(client.tax) : 'name:'+norm(client.name); }
+function sameClient(a,b) {
+  return a.tax && b.tax ? clientKey(a)===clientKey(b) : norm(a.name)!=='' && norm(a.name)===norm(b.name);
+}
+function clients() {
+  return [...new Map([...initialClients,...records.slice().reverse().map(record=>record.client),...savedClients].map(client=>[clientKey(client),client])).values()];
+}
+function currentClient() {
+  return {name:el('company').value.trim(),tax:el('tax').value.trim(),address:el('address').value.trim()};
+}
+function replaceOptions(select, options, selectedValue=select.value) {
+  select.replaceChildren(...options.map(([value,label])=>{
+    const option=element('option',label);
+    option.value=value;
+    return option;
+  }));
+  if (options.some(([value])=>value===selectedValue)) select.value=selectedValue;
+}
+function selectClient() {
+  clearTimeout(lookupTimer);
+  lookupRequest?.abort();
+  put('client-status','');
+  const match=clients().find(client=>clientKey(client)===el('client').value);
+  el('company').value=match?.name ?? '';
+  el('tax').value=match?.tax ?? '';
+  el('address').value=match?.address ?? '';
+  el('custom-client').hidden=Boolean(match);
+  el('lookup-controls').hidden=Boolean(match);
+  el('new-client-actions').hidden=Boolean(match);
+  el('company').required=!match;
+  el('tax').readOnly=Boolean(match);
+}
+function normalizeNip(value) {
+  return value.trim().toUpperCase().replace(/^PL[\s-]*/,'').replace(/[\s-]/g,'');
+}
+function validNip(value) {
+  if(!/^\d{10}$/.test(value)) return false;
+  const weights=[6,5,7,2,3,4,5,6,7];
+  return weights.reduce((sum,weight,index)=>sum+weight*Number(value[index]),0)%11===Number(value[9]);
+}
+async function lookupNip() {
+  clearTimeout(lookupTimer);
+  lookupRequest?.abort();
+  const nip=normalizeNip(el('tax').value);
+  if(!validNip(nip)){put('client-status',t('invalidNip'));return;}
+  const request=new AbortController();
+  lookupRequest=request;
+  const timeout=setTimeout(()=>request.abort('timeout'),10000);
+  put('client-status',t('looking'));
+  try {
+    const url='https://wykazpodatnikowvat.mf.gov.pl/api/search/nip/'+nip+'?date='+today();
+    const response=await fetch(url,{signal:request.signal});
+    if(response.status!==404&&!response.ok) throw new Error('registry unavailable');
+    const result=response.ok?(await response.json()).result?.subject:null;
+    if(request.signal.aborted||el('client').value!=='custom'||normalizeNip(el('tax').value)!==nip) return;
+    if(!result?.name||normalizeNip(result.nip??'')!==nip){put('client-status',t('notFound'));return;}
+    el('company').value=result.name;
+    el('tax').value=nip;
+    el('address').value=result.residenceAddress || result.workingAddress || el('address').value;
+    touch();
+    renderHistory();
+    refreshQuote();
+    put('client-status',t('found'));
+  } catch {
+    if(!request.signal.aborted||request.signal.reason==='timeout') put('client-status',t('lookupError'));
+  } finally {
+    clearTimeout(timeout);
   }
-
-  function render() {
-    const lang = language();
-    const quoteLang = quoteLanguage();
-    const quoteText = copy[quoteLang];
-    const qty = el('quantity').validity.valid ? el('quantity').valueAsNumber : 0;
-    const unit = catalog.reduce((sum, part) => sum + (el('part-' + part.id).checked ? part[currency()] : 0), 0);
-    const service = el('service-enabled').checked;
-    const servicePrice = el('service-price');
-    servicePrice.disabled = !service;
-    const monthly = servicePrice.validity.valid && service ? Math.round(servicePrice.valueAsNumber * 100) : 0;
-    const vehicle = el('vehicle').value.trim();
-    const client = clients[el('client').value];
-    document.documentElement.lang = lang;
-    document.title = copy[lang].title + ' | GX Solutions Polska';
-    el('language').setAttribute('aria-label', copy[lang].language);
-    el('paper').lang = quoteLang;
-    el('description').lang = quoteLang;
-    el('vehicle').placeholder = lang === 'pl' ? 'np. Škoda Octavia' : 'např. Škoda Octavia';
-    document.querySelectorAll('[data-t]').forEach(node => {
-      node.textContent = (node.closest('#paper') ? quoteText : copy[lang])[node.dataset.t];
+}
+function saveClient() {
+  const client=currentClient();
+  if(!client.name){el('company').reportValidity();return;}
+  const nip=normalizeNip(client.tax);
+  if(nip && /^\d{10}$/.test(nip) && !validNip(nip)){put('client-status',t('invalidNip'));return;}
+  if(validNip(nip)) client.tax=nip;
+  const updated=[...savedClients.filter(item=>clientKey(item)!==clientKey(client)),client];
+  try {localStorage.setItem(clientsKey,JSON.stringify(updated));}
+  catch {put('client-status',t('storageError'));return;}
+  savedClients=updated;
+  refresh();
+  el('client').value=clientKey(client);
+  selectClient();
+  renderHistory();
+  refreshQuote();
+  put('save-status',t('clientSaved'));
+}
+function setView(next) {
+  view=next;
+  el('builder').hidden=next!=='builder';
+  el('history-view').hidden=next!=='history';
+  el('new-tab').setAttribute('aria-pressed',String(next==='builder'));
+  el('history-tab').setAttribute('aria-pressed',String(next==='history'));
+  renderHistory();
+}
+function persist(updated) {
+  try {
+    localStorage.setItem(storageKey,JSON.stringify(updated));
+  } catch {
+    put('save-status',t('storageError'));
+    return false;
+  }
+  records=updated;
+  return true;
+}
+function newNumber() {
+  el('number').value='GX-'+today().replaceAll('-','')+'-'+crypto.randomUUID().slice(0,8).toUpperCase();
+}
+function touch() {
+  if(lastSaved) newNumber();
+  lastSaved=null;
+  put('save-status','');
+  put('status','');
+}
+function totals(record) {
+  let gross=0, floor=0, monthly=0, units=0;
+  for (const group of record.groups) {
+    gross+=group.qty*group.items.reduce((sum,item)=>sum+item.price,0);
+    floor+=group.qty*group.items.reduce((sum,item)=>sum+item.floor,0);
+    monthly+=group.qty*(group.service ?? 0);
+    units+=group.qty;
+  }
+  return {gross,floor,monthly,units,net:gross-record.discount};
+}
+function draft() {
+  const snapshots=groups.map(group=>({
+    product:group.product,label:group.label,qty:group.qty,descriptions:{...group.descriptions},service:group.serviceEnabled?group.service:null,
+    items:Object.entries(group.prices).map(([id,price])=>({id,price,floor:minimum(id)}))
+  }));
+  return {number:el('number').value,date:today(),validity:el('date').value,client:currentClient(),salesperson:el('salesperson').value,
+    currency:currency(),language:quoteLang(),groups:snapshots,discount:amount(el('discount'))};
+}
+function draftError(record) {
+  if (!record.groups.length || record.groups.some(group=>!group.items.length)) return 'noProducts';
+  const priceInvalid=groups.some(group=>!Number.isInteger(group.qty)||group.qty<1||group.qty>999||group.serviceEnabled&&group.service===null||
+    Object.entries(group.prices).some(([id,price])=>price===null||price<minimum(id)));
+  const total=totals(record);
+  if (priceInvalid||[total.gross,total.floor,total.monthly].some(n=>!Number.isSafeInteger(n))) return 'pricingError';
+  if (record.discount===null||record.discount>total.gross) return 'invalidDiscount';
+  return '';
+}
+function renderPaper(record) {
+  const lang=record.language;
+  const text=words[lang];
+  const format=value=>money(value,lang,record.currency);
+  const paper=el('paper');
+  paper.lang=lang;
+  paper.querySelectorAll('[data-t]').forEach(node=>{node.textContent=text[node.dataset.t];});
+  put('pdf-client',record.client.name||'—');
+  put('pdf-tax',record.client.tax||'—');
+  el('pdf-address-row').hidden=!record.client.address;
+  put('pdf-address',record.client.address??'');
+  put('pdf-number',record.number);
+  put('pdf-date',dateText(record.validity,lang));
+  const items=[],services=[];
+  for (const group of record.groups) {
+    if (!group.items.length) continue;
+    const price=group.items.reduce((sum,item)=>sum+item.price,0);
+    const row=element('tr');
+    const name=element('td');
+    const title=[loc(products[group.product].scope,lang),group.label].filter(Boolean).join(' · ');
+    name.append(element('strong',title),element('small',group.descriptions[lang]));
+    row.append(name,element('td',group.qty),element('td',format(price)),element('td',format(price*group.qty)));
+    items.push(row);
+    if(group.service!==null) {
+      const service=element('tr');
+      service.append(element('td',text.service+' · '+loc(products[group.product].name,lang)),element('td',group.qty),element('td',format(group.service)),element('td',format(group.qty*group.service)));
+      services.push(service);
+    }
+  }
+  el('pdf-items').replaceChildren(...items);
+  el('pdf-services').replaceChildren(...services);
+  el('pdf-service').hidden=!services.length;
+  el('pdf-discount-row').hidden=!record.discount;
+  put('pdf-discount',format(-record.discount));
+  put('pdf-total',format(totals(record).net));
+}
+function refreshQuote() {
+  const record=draft();
+  const total=totals(record);
+  const error=draftError(record);
+  const under=!error && total.net<total.floor;
+  const saved=records.find(item=>item.number===lastSaved);
+  const pending=under && saved?.status!=='approved';
+  el('save').disabled=Boolean(saved);
+  put('save',t(pending?'request':'save'));
+  put('quote-min',money(total.floor));
+  put('quote-total',money(total.net));
+  put('approval-note',t(error&&error!=='noProducts'?error:pending?'below':under?'approved':'')??'');
+  const group=groups[selected];
+  if(group) put('unit-total',money(Object.values(group.prices).reduce((sum,price)=>sum+price,0)));
+  el('print').disabled=Boolean(error||pending);
+  document.body.dataset.printable=String(!error&&!pending&&el('editor').checkValidity()&&Boolean(record.client.name));
+  renderPaper(record);
+}
+function historyCard(record,review) {
+  const totalsForRecord=totals(record);
+  const item=element('article',undefined,'record');
+  const details=element('div');
+  details.append(element('strong',record.number+' · '+record.client.name));
+  const by=[dateText(record.date),record.salesperson,money(totalsForRecord.net,uiLang(),record.currency),totalsForRecord.units+' '+t('units')];
+  if(totalsForRecord.monthly) by.push(t('monthly')+' '+money(totalsForRecord.monthly,uiLang(),record.currency));
+  details.append(element('small',by.join(' · ')),element('small',t(record.status),record.status==='pending'?'pending':''));
+  const actions=element('div',undefined,'actions');
+  actions.append(action(t('duplicate'),()=>copyRecord(record)));
+  if (record.status!=='pending') actions.append(action(t('pdf'),()=>printSaved(record)));
+  if (review&&record.status==='pending') actions.append(action(t('approve'),()=>{
+    if (persist(records.map(item=>item.number===record.number?{...item,status:'approved'}:item))) refresh();
+    else window.alert(t('storageError'));
+  }));
+  item.append(details,actions);
+  return item;
+}
+function renderHistory() {
+  const filters=clients().map(client=>[clientKey(client),client.name]);
+  replaceOptions(el('history-client'),[['',t('all')],...filters]);
+  const filter=clients().find(client=>clientKey(client)===el('history-client').value);
+  const all=records.filter(record=>!filter||sameClient(record.client,filter)).map(record=>historyCard(record,true));
+  const current=currentClient();
+  const old=records.filter(record=>sameClient(record.client,current)).map(record=>historyCard(record,false));
+  el('history-list').replaceChildren(...(all.length?all:[element('p',t('none'),'empty')]));
+  el('customer-records').replaceChildren(...(old.length?old:[element('p',t('none'),'empty')]));
+  el('client-history').hidden=!current.name&&!current.tax;
+}
+function renderGroup() {
+  const group=groups[selected];
+  el('configuration').hidden=!group;
+  el('group-fields').hidden=!group;
+  el('group-fields').disabled=!group;
+  el('groups').replaceChildren(...groups.map((item,index)=>{
+    const button=action(loc(products[item.product].name,uiLang())+' · '+(index+1),()=>{selected=index;renderGroup();refreshQuote();});
+    button.setAttribute('aria-pressed',String(index===selected));
+    return button;
+  }));
+  if(!group) return;
+  el('vehicle').value=group.label;
+  el('quantity').value=group.qty??'';
+  el('description').value=group.descriptions[quoteLang()];
+  el('description').lang=quoteLang();
+  el('service-enabled').checked=group.serviceEnabled;
+  el('service-price').value=group.service===null?'':group.service/100;
+  el('service-price').disabled=!group.serviceEnabled;
+  el('service-field').hidden=!group.serviceEnabled;
+  el('components').replaceChildren(...products[group.product].parts.map(id=>{
+    const row=element('div',undefined,'component');
+    const label=element('label');
+    const checkbox=element('input');
+    checkbox.type='checkbox';
+    checkbox.checked=Object.hasOwn(group.prices,id);
+    const name=loc(parts[id].slice(0,2),uiLang());
+    const floor=minimum(id);
+    const price=element('input',undefined,'part-price');
+    price.type='number';
+    price.min=String(floor/100);
+    price.step='0.01';
+    price.required=true;
+    price.disabled=!checkbox.checked;
+    price.value=checkbox.checked ? (group.prices[id]===null?'':group.prices[id]/100) : floor/100;
+    price.setAttribute('aria-label',t('sellPrice')+' · '+name);
+    const caption=element('span',name);
+    caption.append(element('small',t('minPart')+' '+money(floor)));
+    label.append(checkbox,caption);
+    checkbox.addEventListener('change',()=>{
+      if(checkbox.checked) group.prices[id]=floor;
+      else delete group.prices[id];
+      price.value=floor/100;
+      price.disabled=!checkbox.checked;
+      touch(); refreshQuote();
     });
-    for (const part of catalog) {
-      put('name-' + part.id, part[lang]);
-      put('price-' + part.id, money(part[currency()], lang));
-    }
-    put('unit-total', money(unit, lang));
-    put('pdf-client', (client?.name ?? el('company').value.trim()) || '—');
-    put('pdf-tax', el('tax').value.trim() || '—');
-    put('pdf-number', el('number').value.trim() || '—');
-    put('pdf-date', localeDate(el('date').value, quoteLang));
-    put('pdf-item', vehicle ? [quoteText.package, vehicle].join(' · ') : quoteText.package);
-    put('pdf-description', el('description').value.trim());
-    put('pdf-qty', qty || '—');
-    put('pdf-unit', money(unit, quoteLang));
-    put('pdf-total', money(unit * qty, quoteLang));
-    el('service-field').hidden = !service;
-    el('pdf-service').hidden = !service;
-    put('pdf-service-qty', qty || '—');
-    put('pdf-service-unit', money(monthly, quoteLang));
-    put('pdf-service-total', money(monthly * qty, quoteLang));
+    price.addEventListener('input',()=>{group.prices[id]=amount(price);touch();refreshQuote();});
+    row.append(label,price);
+    return row;
+  }));
+}
+function refresh() {
+  document.documentElement.lang=uiLang();
+  document.title=t('title')+' | GX Solutions Polska';
+  el('language').setAttribute('aria-label',t('language'));
+  document.querySelectorAll('[data-t]').forEach(node=>{
+    if (!node.closest('#paper')) node.textContent=t(node.dataset.t);
+  });
+  replaceOptions(el('product'),[['',t('pickProduct')],...Object.entries(products).map(([id,product])=>[id,loc(product.name,uiLang())])]);
+  replaceOptions(el('client'),[...clients().map(client=>[clientKey(client),client.name]),['custom',t('custom')]]);
+  el('add-product').disabled=!el('product').value;
+  renderGroup();
+  renderHistory();
+  refreshQuote();
+}
+function copyRecord(record) {
+  if(groups.length&&!lastSaved&&!window.confirm(t('discard'))) return;
+  touch();
+  newNumber();
+  el('date').value=today(30);
+  el('currency').value=record.currency;
+  currentCurrency=record.currency;
+  el('quote-language').value=record.language;
+  el('discount').value=record.discount/100;
+  groups=record.groups.map(group=>({
+    product:group.product,label:group.label,qty:group.qty,descriptions:{...group.descriptions},
+    service:group.service??monthDefault(),serviceEnabled:group.service!==null,
+    prices:Object.fromEntries(group.items.map(item=>[item.id,Math.max(item.price,minimum(item.id))]))
+  }));
+  selected=0;
+  replaceOptions(el('client'),[...clients().map(client=>[clientKey(client),client.name]),['custom',t('custom')]],clientKey(record.client));
+  selectClient();
+  setView('builder');
+  refresh();
+  put('save-status',t('copied'));
+  window.scrollTo(0,0);
+}
+function saveRecord() {
+  if(!el('editor').reportValidity()) return;
+  const record=draft();
+  if(!record.client.name) {el('company').focus();return;}
+  const error=draftError(record);
+  if(error) {put('save-status',t(error));return;}
+  const total=totals(record);
+  record.status=total.net<total.floor?'pending':'ready';
+  if(!persist([record,...records])) return;
+  lastSaved=record.number;
+  refresh();
+  put('save-status',t(record.status==='pending'?'pending':'saved'));
+}
+function printSaved(record) {
+  setView('builder');
+  renderPaper(record);
+  document.body.dataset.printable='true';
+  window.print();
+  setView('history');
+  refreshQuote();
+}
+el('new-tab').addEventListener('click',()=>setView('builder'));
+el('history-tab').addEventListener('click',()=>setView('history'));
+el('history-client').addEventListener('change',renderHistory);
+el('language').addEventListener('change',refresh);
+el('editor').addEventListener('submit',event=>event.preventDefault());
+el('client').addEventListener('change',()=>{touch();selectClient();renderHistory();refreshQuote();});
+for(const id of ['company','address']) el(id).addEventListener('input',()=>{touch();renderHistory();refreshQuote();});
+el('tax').addEventListener('input',()=>{
+  touch();renderHistory();refreshQuote();
+  clearTimeout(lookupTimer);
+  lookupRequest?.abort();
+  put('client-status','');
+  if(el('client').value==='custom'&&validNip(normalizeNip(el('tax').value))) lookupTimer=setTimeout(lookupNip,500);
+});
+el('nip-lookup').addEventListener('click',lookupNip);
+el('save-client').addEventListener('click',saveClient);
+for(const id of ['date','salesperson','discount']) el(id).addEventListener('input',()=>{touch();refreshQuote();});
+el('quote-language').addEventListener('change',()=>{touch();renderGroup();refreshQuote();});
+el('product').addEventListener('change',()=>{el('add-product').disabled=!el('product').value;});
+el('add-product').addEventListener('click',()=>{
+  const product=el('product').value;
+  if(!product) return;
+  touch();
+  groups.push({product,label:'',qty:1,descriptions:{pl:'',cs:''},serviceEnabled:false,service:monthDefault(),prices:{}});
+  selected=groups.length-1;
+  renderGroup();
+  refreshQuote();
+  el('vehicle').focus();
+});
+el('remove-product').addEventListener('click',()=>{
+  touch();
+  groups.splice(selected,1);
+  selected=Math.min(selected,groups.length-1);
+  renderGroup();
+  refreshQuote();
+});
+el('vehicle').addEventListener('input',()=>{groups[selected].label=el('vehicle').value;touch();refreshQuote();});
+el('quantity').addEventListener('input',()=>{groups[selected].qty=el('quantity').validity.valid?el('quantity').valueAsNumber:null;touch();refreshQuote();});
+el('description').addEventListener('input',()=>{groups[selected].descriptions[quoteLang()]=el('description').value;touch();refreshQuote();});
+el('service-price').addEventListener('input',()=>{groups[selected].service=amount(el('service-price'));touch();refreshQuote();});
+el('service-enabled').addEventListener('change',()=>{
+  groups[selected].serviceEnabled=el('service-enabled').checked;
+  touch();renderGroup();refreshQuote();
+});
+el('currency').addEventListener('change',()=>{
+  if(currentCurrency===currency()) return;
+  currentCurrency=currency();
+  touch();
+  for(const group of groups) {
+    for(const id of Object.keys(group.prices)) group.prices[id]=minimum(id);
+    group.service=monthDefault();
   }
-
-  el('language').addEventListener('change', () => {
-    put('status', '');
-    render();
-  });
-  el('quote-language').addEventListener('change', () => {
-    el('description').value = descriptions[quoteLanguage()];
-    render();
-  });
-  el('description').addEventListener('input', () => {
-    descriptions[quoteLanguage()] = el('description').value;
-  });
-  el('editor').addEventListener('input', () => { put('status', ''); render(); });
-  el('client').addEventListener('change', () => { updateClient(); render(); });
-  el('currency').addEventListener('change', () => {
-    el('service-price').value = serviceDefaults[currency()];
-    render();
-    put('status', copy[language()].replaceCurrency);
-  });
-  el('editor').addEventListener('submit', event => event.preventDefault());
-  el('print').addEventListener('click', () => {
-    if (!el('editor').reportValidity()) return;
-    if (!catalog.some(part => el('part-' + part.id).checked)) {
-      put('status', copy[language()].pickComponent);
-      el('part-unit').focus();
-      return;
-    }
-    put('status', '');
-    window.print();
-  });
-  const validUntil = new Date();
-  validUntil.setDate(validUntil.getDate() + 30);
-  el('date').value = [validUntil.getFullYear(), String(validUntil.getMonth() + 1).padStart(2, '0'), String(validUntil.getDate()).padStart(2, '0')].join('-');
-  el('description').value = descriptions[quoteLanguage()];
-  updateClient();
-  render();
+  el('discount').value=0;
+  renderGroup();refreshQuote();
+  put('save-status',t('currencyChanged'));
+});
+el('save').addEventListener('click',saveRecord);
+el('reset').addEventListener('click',()=>{
+  if(groups.length&&!lastSaved&&!window.confirm(t('discard'))) return;
+  groups=[];
+  selected=-1;
+  lastSaved=null;
+  el('product').value='';
+  el('discount').value=0;
+  el('date').value=today(30);
+  newNumber();
+  touch();
+  refresh();
+  el('product').focus();
+});
+el('print').addEventListener('click',()=>{
+  if(!el('editor').reportValidity()||document.body.dataset.printable!=='true') return;
+  window.print();
+});
+newNumber();
+el('date').value=today(30);
+refresh();
+selectClient();
+renderHistory();
+refreshQuote();
 </script>
 </body>
 </html>
