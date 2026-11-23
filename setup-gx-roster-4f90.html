@@ -1,0 +1,29 @@
+<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"><title>Načtení klientů GX Polska</title></head><body><h1>Načíst klienty do tohoto prohlížeče</h1><label>Soukromý seznam klientů GX Polska <input id="catalog" type="file" accept=".html,.json"></label><p id="status" role="status"></p><a id="return" href="./" hidden>Otevřít generátor nabídek</a><script>
+const input=document.getElementById('catalog');
+const status=document.getElementById('status');
+input.addEventListener('change',async()=>{
+  const file=input.files[0];
+  if(!file) return;
+  try{
+    if(file.size>250000) throw Error('Soubor má neočekávanou velikost.');
+    const content=await file.text();
+    const payload=file.name.toLowerCase().endsWith('.json')?content:new DOMParser().parseFromString(content,'text/html').getElementById('clients')?.textContent;
+    const rows=JSON.parse(payload);
+    const identity=name=>name.trim().normalize('NFKC').toLowerCase().replace(/[\s-]+/g,'');
+    const validNip=nip=>/^\d{10}$/.test(nip)&&[6,5,7,2,3,4,5,6,7].reduce((sum,weight,index)=>sum+weight*Number(nip[index]),0)%11===Number(nip[9]);
+    if(!Array.isArray(rows)||rows.length!==114||new Set(rows.map(row=>identity(row.name))).size!==114||
+       !rows.every(row=>typeof row.name==='string'&&row.name.trim()&&typeof row.tax==='string'&&(!row.tax||validNip(row.tax))&&typeof row.address==='string')) throw Error('Soubor nemá očekávaný seznam 114 klientů.');
+    const key='gx-clients-demo-v1';
+    const existing=JSON.parse(localStorage.getItem(key)||'[]');
+    const updated=new Map(existing.map(row=>[identity(row.name),row]));
+    for(const {name,tax,address} of rows){
+      const id=identity(name);
+      const previous=updated.get(id);
+      updated.set(id,{name,tax:tax||previous?.tax||'',address:address||previous?.address||''});
+    }
+    localStorage.setItem(key,JSON.stringify([...updated.values()]));
+    status.textContent='Načteno: '+rows.length+' klientů GX Polska. Doplněno NIP ve '+rows.filter(row=>row.tax).length+' záznamech.';
+    document.getElementById('return').hidden=false;
+  }catch(error){status.textContent=error.message||'Nepodařilo se načíst klienty.';}
+});
+</script></body></html>
