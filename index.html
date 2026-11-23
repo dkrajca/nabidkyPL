@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GX Solutions Polska | Generator ofert</title>
+<style>
+  :root{font-family:Inter,system-ui,sans-serif;color:#16263b;background:#eef2f7;line-height:1.45;--navy:#101e32;--muted:#465870;--line:#d5deea;--accent:#f5bd52}
+  *{box-sizing:border-box}body{margin:0}h1,h2,h3,p,dl{margin:0}input,select,button,textarea{font:inherit}button,select{cursor:pointer}[hidden]{display:none!important}
+  .masthead{background:var(--navy);color:white;padding:16px max(20px,calc((100vw - 1330px)/2));display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .identity{display:flex;align-items:center;gap:12px;font-weight:700}.mark{background:var(--accent);color:var(--navy);padding:7px 9px;border-radius:6px;font-weight:900;letter-spacing:-.06em}.locale{display:flex;gap:8px;align-items:center}.locale select{background:#1b2c45;color:white;border-color:#60728a;width:auto;padding:6px 28px 6px 9px}
+  main{max-width:1370px;margin:auto;padding:32px 20px 48px}.intro{margin-bottom:23px;display:flex;gap:20px;justify-content:space-between;align-items:end}h1{font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:-.045em;line-height:1.12}.intro p{margin-top:8px;color:var(--muted)}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.06fr);gap:24px;align-items:start}.editor,.preview{min-width:0}.panel,.preview{background:#fff;border:1px solid var(--line);border-radius:12px}.panel{padding:20px;margin-bottom:14px}.panel h2,.preview h2{font-size:1.14rem;letter-spacing:-.02em}.panel h2{margin-bottom:14px}
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:13px}.wide{grid-column:1/-1}label,.field-label{font-size:.88rem;font-weight:650}input,select,textarea{width:100%;padding:8px 10px;border:1px solid #aebed2;border-radius:6px;background:#fff;color:inherit;min-width:0}select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,currentColor 50%),linear-gradient(135deg,currentColor 50%,transparent 50%);background-position:calc(100% - 15px) 50%,calc(100% - 10px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:27px}input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible{outline:3px solid #3866ab;outline-offset:2px}label>input,label>select,label>textarea{display:block;margin-top:4px}textarea{resize:vertical;min-height:64px}
+  .catalog{margin:15px 0 0;padding:0;border:none}.catalog legend{margin-bottom:5px}.component{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border-top:1px solid #e1e8f0;padding:9px 0}.component label{display:flex;align-items:center;gap:9px;cursor:pointer}.component input{width:17px;height:17px;margin:0;accent-color:#204878}.component output{font-size:.88rem;font-variant-numeric:tabular-nums;color:var(--muted);white-space:nowrap}.hint{font-size:.86rem;color:var(--muted);margin-top:4px}.total{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:1px solid var(--line);padding-top:12px;margin-top:11px;font-weight:700}.total output{font-variant-numeric:tabular-nums}
+  .preview{overflow:hidden;position:sticky;top:16px}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}button{background:var(--accent);border:1px solid #a66b05;color:var(--navy);border-radius:7px;padding:8px 12px;font-weight:750}button:hover{background:#ffd282}.paper-wrap{padding:20px;background:#e4ebf4}.paper{background:white;padding:clamp(15px,3vw,34px);border:1px solid #ccd7e5;box-shadow:0 5px 12px #132a4820;min-height:485px;font-size:.87rem}.dochead{display:flex;justify-content:space-between;align-items:start;gap:12px;border-bottom:3px solid #e1aa41;padding-bottom:13px}.dochead strong{font-size:1rem}.dochead h3{font-size:clamp(1.2rem,2.5vw,1.65rem);line-height:1.15;text-align:right}.meta{display:grid;grid-template-columns:1fr 1fr;gap:11px 16px;margin:17px 0}.meta dt{color:var(--muted);font-size:.81rem}.meta dd{margin:1px 0 0;font-weight:650;overflow-wrap:anywhere}.doc-section{margin-top:19px}.doc-section h4{margin:0 0 5px;font-size:.93rem}.offer-table{width:100%;border-collapse:collapse;table-layout:fixed}.offer-table th,.offer-table td{border-bottom:1px solid var(--line);padding:7px 4px;vertical-align:top;overflow-wrap:anywhere}.offer-table th{background:#e9eff7;color:#243b58;font-weight:700;text-align:left}.offer-table :is(th,td):not(:first-child){text-align:right}.offer-table col:first-child{width:44%}.offer-table col:nth-child(2){width:10%}.offer-table col:nth-child(3),.offer-table col:nth-child(4){width:23%}.offer-table td:first-child small{display:block;color:var(--muted);white-space:pre-wrap;font-size:.83rem;margin-top:4px}.doc-footer{border-top:1px solid var(--line);padding-top:11px;margin-top:23px;color:var(--muted);font-size:.84rem}.demo-watermark{font-weight:800;color:#8a4c08;margin-top:4px}.status{margin-top:10px;color:#7e2d16;font-size:.9rem}.status:empty{display:none}
+  @media(max-width:940px){.layout{grid-template-columns:1fr}.preview{position:static}.paper{min-height:0}.intro{align-items:start}}@media(max-width:475px){.masthead{padding:13px 14px}.identity{gap:6px}.locale>span{display:none}.fields{grid-template-columns:1fr}.panel{padding:15px}.paper-wrap{padding:9px}.paper{padding:12px}.offer-table th,.offer-table td{font-size:.79rem}.offer-table td:first-child small{font-size:.77rem}}
+  @page{size:A4;margin:17mm}
+  @media print{body,main,.paper-wrap,.paper{background:#fff}.masthead,.intro,.editor,.toolbar{display:none!important}main,.layout,.preview,.paper-wrap,.paper{display:block;position:static;margin:0;padding:0;max-width:none;width:100%;min-height:0;border:0;box-shadow:none;overflow:visible}.paper{font-size:10pt;print-color-adjust:exact}.dochead,.meta,.doc-section,.doc-footer{break-inside:avoid}.dochead h3{font-size:18pt}}
+</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="identity"><span class="mark">GX</span> GX Solutions Polska</div>
+  <label class="locale"><span data-t="language">Język</span><select id="language" aria-label="Język / Jazyk"><option value="pl">Polski</option><option value="cs">Čeština</option></select></label>
+</header>
+<main>
+  <div class="intro"><div><h1 data-t="title">Generator ofert GX Fleet</h1><p data-t="demo">Prototyp z przykładowymi klientami i cenami.</p></div></div>
+  <div class="layout">
+    <form class="editor" id="editor">
+      <section class="panel" aria-labelledby="client-heading"><h2 id="client-heading" data-t="clientSection">Klient i oferta</h2>
+        <div class="fields">
+          <label class="wide"><span data-t="client">Klient</span><select id="client"><option value="alpha">Demo Logistics Sp. z o.o.</option><option value="beta">Demo Transport s.r.o.</option><option value="custom" data-t="custom">Wpisz klienta</option></select></label>
+          <label class="wide" id="custom-client" hidden><span data-t="company">Nazwa firmy</span><input id="company" maxlength="120" autocomplete="organization"></label>
+          <label><span data-t="tax">NIP / IČO</span><input id="tax" maxlength="30"></label>
+          <label><span data-t="number">Numer oferty</span><input id="number" maxlength="40" value="DEMO-FLEET-001" required></label>
+          <label><span data-t="validity">Ważna do</span><input id="date" type="date" required></label>
+          <label><span data-t="currency">Waluta</span><select id="currency"><option>PLN</option><option>CZK</option></select></label>
+        </div>
+      </section>
+      <section class="panel" aria-labelledby="install-heading"><h2 id="install-heading" data-t="installation">Konfiguracja montażu</h2>
+        <div class="fields">
+          <label><span data-t="vehicle">Pojazd / oznaczenie</span><input id="vehicle" maxlength="85" placeholder="np. Škoda Octavia"></label>
+          <label><span data-t="qty">Liczba pojazdów</span><input id="quantity" type="number" min="1" max="999" step="1" value="1" required></label>
+        </div>
+        <fieldset class="catalog"><legend class="field-label" data-t="components">Komponenty na pojazd (wewnętrzne)</legend><div id="components"></div></fieldset>
+        <div class="total"><span data-t="unitTotal">Cena montażu za pojazd</span><output id="unit-total"></output></div>
+      </section>
+      <section class="panel" aria-labelledby="scope-heading"><h2 id="scope-heading" data-t="scope">Zakres dla klienta</h2>
+        <label><span data-t="description">Opis dostarczanych funkcji</span><textarea id="description" maxlength="320"></textarea></label>
+        <label class="component"><span data-t="includeService">Dodaj miesięczny abonament</span><input type="checkbox" id="service-enabled" checked></label>
+        <div id="service-field"><label><span data-t="servicePerVehicle">Miesięcznie za pojazd</span><input id="service-price" type="number" min="0" max="999999" step="0.01" value="35" required></label></div>
+      </section>
+    </form>
+    <section class="preview" aria-labelledby="preview-heading">
+      <div class="toolbar"><h2 id="preview-heading" data-t="preview">Podgląd oferty</h2><button id="print" type="button" data-t="pdf">Zapisz jako PDF</button></div>
+      <div class="paper-wrap"><article class="paper" id="paper" aria-label="PDF">
+        <header class="dochead"><strong>GX Solutions Polska</strong><h3 data-t="quote">Oferta cenowa</h3></header>
+        <dl class="meta">
+          <div><dt data-t="client">Klient</dt><dd id="pdf-client"></dd></div><div><dt data-t="number">Numer oferty</dt><dd id="pdf-number"></dd></div>
+          <div><dt data-t="tax">NIP / IČO</dt><dd id="pdf-tax"></dd></div><div><dt data-t="validity">Ważna do</dt><dd id="pdf-date"></dd></div>
+        </dl>
+        <section class="doc-section"><h4 data-t="oneTime">Opłaty jednorazowe</h4>
+          <table class="offer-table"><colgroup><col><col><col><col></colgroup><thead><tr><th scope="col" data-t="item">Pozycja</th><th scope="col" data-t="count">Ilość</th><th scope="col" data-t="unitPrice">Cena jedn.</th><th scope="col" data-t="subtotal">Razem</th></tr></thead><tbody><tr><td><strong id="pdf-item"></strong><small id="pdf-description"></small></td><td id="pdf-qty"></td><td id="pdf-unit"></td><td id="pdf-total"></td></tr></tbody></table>
+        </section>
+        <section class="doc-section" id="pdf-service"><h4 data-t="monthly">Opłaty miesięczne</h4>
+          <table class="offer-table"><colgroup><col><col><col><col></colgroup><thead><tr><th scope="col" data-t="item">Pozycja</th><th scope="col" data-t="count">Ilość</th><th scope="col" data-t="unitPrice">Cena jedn.</th><th scope="col" data-t="subtotal">Razem</th></tr></thead><tbody><tr><td data-t="service">Abonament GX Fleet</td><td id="pdf-service-qty"></td><td id="pdf-service-unit"></td><td id="pdf-service-total"></td></tr></tbody></table>
+        </section>
+        <footer class="doc-footer"><p data-t="vat">Ceny netto, bez VAT.</p><p class="demo-watermark" data-t="demoPdf">Wersja demonstracyjna. Ceny przykładowe.</p></footer>
+      </article><p id="status" class="status" role="status"></p></div>
+    </section>
+  </div>
+</main>
+<script>
+  'use strict';
+  const copy = {
+    pl: {language:'Język',title:'Generator ofert GX Fleet',demo:'Prototyp z przykładowymi klientami i cenami.',clientSection:'Klient i oferta',client:'Klient',custom:'Wpisz klienta',company:'Nazwa firmy',tax:'NIP / IČO',number:'Numer oferty',validity:'Ważna do',currency:'Waluta',installation:'Konfiguracja montażu',vehicle:'Pojazd / oznaczenie',qty:'Liczba pojazdów',components:'Komponenty na pojazd (wewnętrzne)',unitTotal:'Cena montażu za pojazd',scope:'Zakres dla klienta',description:'Opis dostarczanych funkcji',includeService:'Dodaj miesięczny abonament',servicePerVehicle:'Miesięcznie za pojazd',preview:'Podgląd oferty',pdf:'Zapisz jako PDF',quote:'Oferta cenowa',oneTime:'Opłaty jednorazowe',monthly:'Opłaty miesięczne',item:'Pozycja',count:'Ilość',unitPrice:'Cena jedn.',subtotal:'Razem',service:'Abonament GX Fleet',vat:'Ceny netto, bez VAT.',demoPdf:'Wersja demonstracyjna. Ceny przykładowe.',package:'Montaż systemu GX Fleet w pojeździe',defaultDescription:'Lokalizacja GPS i elektroniczna ewidencja przebiegu pojazdu.',pickComponent:'Wybierz co najmniej jeden komponent.',replaceCurrency:'Zmieniono przykładowy cennik i domyślną kwotę abonamentu.'},
+    cs: {language:'Jazyk',title:'Generátor nabídek GX Fleet',demo:'Prototyp s ukázkovými klienty a cenami.',clientSection:'Klient a nabídka',client:'Klient',custom:'Zadat klienta',company:'Název firmy',tax:'IČO / NIP',number:'Číslo nabídky',validity:'Platnost do',currency:'Měna',installation:'Konfigurace osazení',vehicle:'Vozidlo / označení',qty:'Počet vozidel',components:'Komponenty na vozidlo (interní)',unitTotal:'Cena osazení za vozidlo',scope:'Rozsah dodávky pro klienta',description:'Popis dodaných funkcí',includeService:'Přidat měsíční paušál',servicePerVehicle:'Měsíčně za vozidlo',preview:'Náhled nabídky',pdf:'Uložit jako PDF',quote:'Cenová nabídka',oneTime:'Jednorázové platby',monthly:'Měsíční platby',item:'Položka',count:'Počet',unitPrice:'Cena za kus',subtotal:'Celkem',service:'Servisní program GX Fleet',vat:'Ceny jsou uvedeny bez DPH.',demoPdf:'Ukázková nabídka. Testovací ceny.',package:'Osazení vozidla systémem GX Fleet',defaultDescription:'GPS lokalizace a elektronická kniha jízd.',pickComponent:'Vyber alespoň jednu komponentu.',replaceCurrency:'Přepnul se ukázkový ceník a výchozí částka měsíčního paušálu.'}
+  };
+  const clients = {
+    alpha:{name:'Demo Logistics Sp. z o.o.', tax:'DEMO-PL-001'},
+    beta:{name:'Demo Transport s.r.o.', tax:'DEMO-CZ-002'}
+  };
+  // Demo unit prices in minor currency units. Each currency has an independent price list.
+  const catalog = [
+    {id:'unit',pl:'Jednostka GPS',cs:'GPS jednotka',PLN:42000,CZK:250000,selected:true},
+    {id:'gsm',pl:'Moduł GSM',cs:'GSM modul',PLN:9000,CZK:55000,selected:true},
+    {id:'wiring',pl:'Wiązka i materiały',cs:'Kabeláž a materiál',PLN:7500,CZK:46000,selected:true},
+    {id:'installation',pl:'Montaż i uruchomienie',cs:'Montáž a zprovoznění',PLN:21500,CZK:130000,selected:true},
+    {id:'ignition',pl:'Podłączenie sygnału zapłonu',cs:'Připojení signálu zapalování',PLN:11000,CZK:66000,selected:false}
+  ];
+  const serviceDefaults = {PLN:35,CZK:220};
+  const el = (id) => document.getElementById(id);
+  const put = (id, value) => { el(id).textContent = value; };
+  const language = () => el('language').value;
+  const currency = () => el('currency').value;
+  const money = (minor) => new Intl.NumberFormat(language() === 'pl' ? 'pl-PL' : 'cs-CZ', {style:'currency',currency:currency()}).format(minor / 100);
+  const localeDate = (value) => value ? new Intl.DateTimeFormat(language(), {dateStyle:'medium',timeZone:'UTC'}).format(new Date(value + 'T00:00:00Z')) : '—';
+
+  for (const component of catalog) {
+    const row = document.createElement('div');
+    row.className = 'component';
+    const label = document.createElement('label');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.id = 'part-' + component.id;
+    checkbox.checked = component.selected;
+    const name = document.createElement('span');
+    name.id = 'name-' + component.id;
+    const price = document.createElement('output');
+    price.id = 'price-' + component.id;
+    label.append(checkbox, name);
+    row.append(label, price);
+    el('components').append(row);
+  }
+
+  function updateClient() {
+    const client = clients[el('client').value];
+    el('tax').value = client?.tax ?? '';
+    el('custom-client').hidden = Boolean(client);
+    el('company').required = !client;
+  }
+
+  function render() {
+    const lang = language();
+    const text = copy[lang];
+    const qty = el('quantity').validity.valid ? el('quantity').valueAsNumber : 0;
+    const unit = catalog.reduce((sum, part) => sum + (el('part-' + part.id).checked ? part[currency()] : 0), 0);
+    const service = el('service-enabled').checked;
+    const servicePrice = el('service-price');
+    servicePrice.disabled = !service;
+    const monthly = servicePrice.validity.valid && service ? Math.round(servicePrice.valueAsNumber * 100) : 0;
+    const vehicle = el('vehicle').value.trim();
+    const client = clients[el('client').value];
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-t]').forEach(node => { node.textContent = text[node.dataset.t]; });
+    for (const part of catalog) {
+      put('name-' + part.id, part[lang]);
+      put('price-' + part.id, money(part[currency()]));
+    }
+    put('unit-total', money(unit));
+    put('pdf-client', (client?.name ?? el('company').value.trim()) || '—');
+    put('pdf-tax', el('tax').value.trim() || '—');
+    put('pdf-number', el('number').value.trim() || '—');
+    put('pdf-date', localeDate(el('date').value));
+    put('pdf-item', vehicle ? `${text.package} · ${vehicle}` : text.package);
+    put('pdf-description', el('description').value.trim());
+    put('pdf-qty', qty || '—');
+    put('pdf-unit', money(unit));
+    put('pdf-total', money(unit * qty));
+    el('service-field').hidden = !service;
+    el('pdf-service').hidden = !service;
+    put('pdf-service-qty', qty || '—');
+    put('pdf-service-unit', money(monthly));
+    put('pdf-service-total', money(monthly * qty));
+  }
+
+  el('language').addEventListener('change', () => {
+    const description = el('description');
+    if (Object.values(copy).some(text => text.defaultDescription === description.value)) {
+      description.value = copy[language()].defaultDescription;
+    }
+    put('status', '');
+    render();
+  });
+  el('editor').addEventListener('input', () => { put('status', ''); render(); });
+  el('client').addEventListener('change', () => { updateClient(); render(); });
+  el('currency').addEventListener('change', () => {
+    el('service-price').value = serviceDefaults[currency()];
+    render();
+    put('status', copy[language()].replaceCurrency);
+  });
+  el('editor').addEventListener('submit', event => event.preventDefault());
+  el('print').addEventListener('click', () => {
+    if (!el('editor').reportValidity()) return;
+    if (!catalog.some(part => el('part-' + part.id).checked)) {
+      put('status', copy[language()].pickComponent);
+      el('part-unit').focus();
+      return;
+    }
+    put('status', '');
+    window.print();
+  });
+  const validUntil = new Date();
+  validUntil.setDate(validUntil.getDate() + 30);
+  el('date').value = [validUntil.getFullYear(), String(validUntil.getMonth() + 1).padStart(2, '0'), String(validUntil.getDate()).padStart(2, '0')].join('-');
+  el('description').value = copy.pl.defaultDescription;
+  updateClient();
+  render();
+</script>
+</body>
+</html>
