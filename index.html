@@ -68,6 +68,11 @@
       <section class="panel" aria-labelledby="client-heading"><h2 id="client-heading" data-t="clientSection">Klient i oferta</h2>
         <div class="fields">
           <label class="wide"><span data-t="client">Klient</span><select id="client"><option value="alpha">Demo Logistics Sp. z o.o.</option><option value="beta">Demo Transport s.r.o.</option><option value="custom" data-t="custom">Wpisz klienta</option></select></label>
+          <div class="wide">
+            <button id="import-clients" class="secondary" type="button" data-t="importClients"></button>
+            <input id="client-workbook" type="file" accept=".xlsx" hidden>
+            <p id="import-status" class="hint" role="status"></p>
+          </div>
           <label class="wide" id="custom-client" hidden><span data-t="company">Nazwa firmy</span><input id="company" maxlength="120" autocomplete="organization"></label>
           <label><span data-t="tax">NIP / IČO</span><input id="tax" maxlength="30"></label>
           <div class="actions" id="lookup-controls" hidden><button id="nip-lookup" class="secondary" type="button" data-t="lookup"></button></div>
@@ -135,7 +140,10 @@ const words = {
     address:'Adres firmy',lookup:'Pobierz dane po NIP',saveClient:'Zapisz klienta',clientSaved:'Klient zapisany w tej przeglądarce.',
     invalidNip:'Sprawdź polski NIP. Powinien mieć 10 cyfr i poprawną cyfrę kontrolną.',looking:'Sprawdzam oficjalny wykaz VAT…',
     found:'Dane z oficjalnego wykazu VAT. Sprawdź adres przed zapisaniem.',notFound:'Brak firmy w wykazie VAT dla tego NIP. Możesz wpisać dane ręcznie.',
-    lookupError:'Wykaz VAT jest chwilowo niedostępny. Spróbuj ponownie lub wpisz dane ręcznie.'
+    lookupError:'Wykaz VAT jest chwilowo niedostępny. Spróbuj ponownie lub wpisz dane ręcznie.',
+    importClients:'Importuj klientów GX Polska z Excela',importing:'Wczytuję plik w tej przeglądarce…',importInvalid:'Nie udało się odczytać pliku .xlsx.',
+    importHeaders:'Nie znaleziono wiersza z kolumnami „Přívlastek” i nazwą firmy.',importEmpty:'Brak klientów z oznaczeniem GX Polska.',
+    importSaved:'Dodano: {count}. Już zapisani: {existing}. Brakujący lub błędny NIP do sprawdzenia: {missing}. Dane zapisano tylko w tej przeglądarce.'
   },
   cs: {
     language:'Jazyk aplikace',quoteLanguage:'Jazyk nabídky',title:'Generátor nabídek GX',demo:'Demo. Používej ukázková data. Historie se ukládá jen v tomto prohlížeči.',
@@ -156,7 +164,10 @@ const words = {
     address:'Adresa firmy',lookup:'Načíst údaje podle NIP',saveClient:'Uložit klienta',clientSaved:'Klient uložen v tomto prohlížeči.',
     invalidNip:'Zkontroluj polské NIP. Má mít 10 číslic a platnou kontrolní číslici.',looking:'Ověřuji oficiální registr DPH…',
     found:'Údaje z oficiálního registru DPH. Před uložením zkontroluj adresu.',notFound:'Pro toto NIP se v registru DPH firma nenašla. Údaje můžeš doplnit ručně.',
-    lookupError:'Registr DPH je momentálně nedostupný. Zkus to znovu nebo údaje doplň ručně.'
+    lookupError:'Registr DPH je momentálně nedostupný. Zkus to znovu nebo údaje doplň ručně.',
+    importClients:'Importovat klienty GX Polska z Excelu',importing:'Načítám soubor v tomto prohlížeči…',importInvalid:'Soubor .xlsx se nepodařilo přečíst.',
+    importHeaders:'Chybí řádek se sloupcem „Přívlastek“ a názvem firmy.',importEmpty:'V souboru nejsou žádní klienti s příznakem GX Polska.',
+    importSaved:'Přidáno: {count}. Už uložených: {existing}. Chybějící nebo chybné NIP k ověření: {missing}. Data jsou uložená jen v tomto prohlížeči.'
   }
 };
 
@@ -278,6 +289,130 @@ function validNip(value) {
   if(!/^\d{10}$/.test(value)) return false;
   const weights=[6,5,7,2,3,4,5,6,7];
   return weights.reduce((sum,weight,index)=>sum+weight*Number(value[index]),0)%11===Number(value[9]);
+}
+function workbookEntries(buffer) {
+  const view=new DataView(buffer);
+  let end=buffer.byteLength-22;
+  const minimumEnd=Math.max(0,end-65535);
+  while(end>=minimumEnd && view.getUint32(end,true)!==0x06054b50) end--;
+  if(end<minimumEnd) throw new Error('Invalid ZIP directory');
+  const entries=new Map();
+  const decoder=new TextDecoder();
+  const count=view.getUint16(end+10,true);
+  let offset=view.getUint32(end+16,true);
+  for(let index=0;index<count;index++){
+    if(view.getUint32(offset,true)!==0x02014b50) throw new Error('Invalid ZIP entry');
+    const nameLength=view.getUint16(offset+28,true);
+    const name=decoder.decode(new Uint8Array(buffer,offset+46,nameLength));
+    if(name==='xl/sharedStrings.xml'||/^xl\/worksheets\/sheet\d+\.xml$/.test(name)){
+      const local=view.getUint32(offset+42,true);
+      if(view.getUint32(local,true)!==0x04034b50) throw new Error('Invalid ZIP member');
+      const start=local+30+view.getUint16(local+26,true)+view.getUint16(local+28,true);
+      entries.set(name,{
+        method:view.getUint16(offset+10,true),size:view.getUint32(offset+24,true),
+        bytes:new Uint8Array(buffer,start,view.getUint32(offset+20,true))
+      });
+    }
+    offset+=46+nameLength+view.getUint16(offset+30,true)+view.getUint16(offset+32,true);
+  }
+  return entries;
+}
+function xmlNodes(node,name) { return Array.from(node.getElementsByTagNameNS('*',name)); }
+async function workbookXml(entry) {
+  if(!entry||entry.size>45_000_000||![0,8].includes(entry.method)) throw new Error('Unsupported workbook entry');
+  let data=entry.bytes;
+  if(entry.method===8){
+    const stream=new Blob([data]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    data=new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+  if(data.byteLength!==entry.size) throw new Error('Invalid workbook entry size');
+  const xml=new DOMParser().parseFromString(new TextDecoder().decode(data),'application/xml');
+  if(xmlNodes(xml,'parsererror').length) throw new Error('Invalid workbook XML');
+  return xml;
+}
+const importHeaders = {
+  tag:['privlastek','atrybut','cecha','priznak'],
+  name:['nazevorganizace','nazevfirmy','obchodninazev','obchodnijmeno','organizace','nazev','firma','nazwafirmy','nazwapodmiotu','nazwapelna','nazwaskrocona','nazwaskroconafirmy','nazwafirmypelna','nazevorganizacepartnera'],
+  tax:['nip','nipvat','vatid','dic','danoveidentifikacnicislo','nipico'],
+  address:['adresasidla','adresa','adressiedziby','adres','sidlo'],
+  street:['ulice','ulica','uliceacislo','ulica i numer','ulicacp'],
+  number:['cislo','cisloorientacni','cisloopisne','nrdomu','numerdomu'],
+  postal:['psc','kodpocztowy','zip'],
+  city:['mesto','obec','miasto','miejscowosc']
+};
+function columnKey(value) {
+  return value.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/ł/g,'l').replace(/[^\p{L}\p{N}]/gu,'');
+}
+function workbookColumns(row) {
+  const values=Object.entries(row).map(([column,value])=>[column,columnKey(value)]);
+  const columns=Object.fromEntries(Object.entries(importHeaders).map(([key,aliases])=>[
+    key,aliases.map(alias=>values.find(([,value])=>value===columnKey(alias))?.[0]).find(Boolean)
+  ]));
+  return columns.tag&&columns.name?columns:null;
+}
+function workbookRow(node,strings) {
+  return Object.fromEntries(xmlNodes(node,'c').map(cell=>{
+    const type=cell.getAttribute('t');
+    const raw=xmlNodes(cell,'v')[0]?.textContent??'';
+    const value=type==='s'?strings[Number(raw)]:
+      type==='inlineStr'?xmlNodes(cell,'t').map(text=>text.textContent).join(''):raw;
+    return [cell.getAttribute('r')?.match(/^[A-Z]+/)?.[0],(value??'').trim()];
+  }).filter(([column])=>column));
+}
+async function workbookClients(file) {
+  if(file.size>30_000_000) throw new Error('Unsupported workbook size');
+  const entries=workbookEntries(await file.arrayBuffer());
+  const shared=entries.get('xl/sharedStrings.xml');
+  const strings=shared?xmlNodes(await workbookXml(shared),'si').map(node=>xmlNodes(node,'t').map(text=>text.textContent).join('')):[];
+  const matches=[];
+  let headerFound=false;
+  for(const [path,entry] of entries){
+    if(!path.startsWith('xl/worksheets/')) continue;
+    let columns=null;
+    for(const node of xmlNodes(await workbookXml(entry),'row')){
+      const row=workbookRow(node,strings);
+      const candidate=workbookColumns(row);
+      if(candidate){columns=candidate;headerFound=true;continue;}
+      if(!columns||!row[columns.name]) continue;
+      const tags=(row[columns.tag]??'').split(/[,;|\r\n]+/);
+      if(!tags.some(tag=>tag.trim().replace(/\s+/g,' ').toLowerCase()==='gx polska')) continue;
+      const nip=normalizeNip(row[columns.tax]??'');
+      const street=[row[columns.street],row[columns.number]].filter(Boolean).join(' ');
+      const city=[row[columns.postal],row[columns.city]].filter(Boolean).join(' ');
+      matches.push({name:row[columns.name],tax:validNip(nip)?nip:'',address:row[columns.address]||[street,city].filter(Boolean).join(', ')});
+    }
+  }
+  return {matches,headerFound};
+}
+async function importClients(file) {
+  if(!file) return;
+  el('import-clients').disabled=true;
+  put('import-status',t('importing'));
+  try {
+    const {matches,headerFound}=await workbookClients(file);
+    if(!headerFound){put('import-status',t('importHeaders'));return;}
+    if(!matches.length){put('import-status',t('importEmpty'));return;}
+    const known=clients();
+    const added=[];
+    for(const client of matches){
+      if(known.some(item=>sameClient(client,item))) continue;
+      known.push(client);
+      added.push(client);
+    }
+    if(added.length){
+      const updated=[...savedClients,...added];
+      try {localStorage.setItem(clientsKey,JSON.stringify(updated));}
+      catch {put('import-status',t('storageError'));return;}
+      savedClients=updated;
+      refresh();
+    }
+    put('import-status',t('importSaved').replace('{count}',added.length)
+      .replace('{existing}',matches.length-added.length).replace('{missing}',added.filter(client=>!client.tax).length));
+  } catch {
+    put('import-status',t('importInvalid'));
+  } finally {
+    el('import-clients').disabled=false;
+  }
 }
 async function lookupNip() {
   clearTimeout(lookupTimer);
@@ -641,6 +776,12 @@ el('tax').addEventListener('input',()=>{
 });
 el('nip-lookup').addEventListener('click',lookupNip);
 el('save-client').addEventListener('click',saveClient);
+el('import-clients').addEventListener('click',()=>el('client-workbook').click());
+el('client-workbook').addEventListener('change',event=>{
+  const file=event.target.files[0];
+  event.target.value='';
+  importClients(file);
+});
 for(const id of ['date','salesperson','discount']) el(id).addEventListener('input',()=>{touch();refreshQuote();});
 el('quote-language').addEventListener('change',()=>{touch();renderGroup();refreshQuote();});
 el('product').addEventListener('change',()=>{
