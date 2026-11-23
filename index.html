@@ -99,6 +99,38 @@
 }
 
   #unlock-form{margin-bottom:14px}#gx-key{width:min(280px,100%);margin:0}@media print{#unlock-form{display:none!important}}
+  .archive-panel{min-width:0}
+  #archive-list{padding:0;background:transparent;border:0}
+  .archive-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,152px),1fr));gap:10px;margin:12px 0}
+  .archive-kpi{background:#edf5ff;border:1px solid #cddff5;border-radius:9px;padding:10px 12px;min-width:0}
+  .archive-kpi dt{font-weight:650;color:#294462;font-size:.8rem}
+  .archive-kpi dd{color:#103b69;font-size:clamp(1rem,1.65vw,1.43rem);font-weight:800;letter-spacing:-.025em;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+  .archive-kpi[data-metric="net"],.archive-kpi[data-metric="monthly"]{background:#eaf7ef;border-color:#c7e5d4}
+  .archive-kpi[data-metric="net"] dd,.archive-kpi[data-metric="monthly"] dd{color:#166048}
+  .archive-kpi[data-metric="gross"]{background:#f2effa;border-color:#ded6ee}
+  .archive-kpi[data-metric="gross"] dd{color:#5a4381}
+  .archive-trend{border:1px solid #d5e0ed;border-radius:10px;background:#f8fbff;margin:12px 0;padding:11px 14px}
+  .archive-trend h3,#history-list h3{font-size:1rem;font-weight:750}
+  .archive-bars{padding:0;margin:10px 0 0;list-style:none;display:flex;gap:9px;overflow-x:auto}
+  .archive-bars li{flex:1 0 52px;display:grid;grid-template-rows:auto 55px auto;gap:4px;justify-items:center;align-items:center;font-size:.77rem;white-space:nowrap;color:#294462}
+  .archive-bar-track{display:flex;align-items:flex-end;width:min(34px,80%);height:100%;background:#e5eef8;border-radius:4px}
+  .archive-bar{display:block;width:100%;background:#2c6caf;border-radius:4px}
+  .archive-bar.undated{background:#7286a0}
+  .history-table-wrap{overflow-x:auto;border:1px solid #cddae8;border-radius:9px;background:#fff;margin-top:10px}
+  .history-table-wrap:focus-visible{outline:2px solid #2c6caf;outline-offset:2px}
+  .history-table{width:100%;min-width:660px;border-collapse:collapse;font-size:.84rem;text-align:left}
+  .history-table thead th{background:#eaf2fc;color:#24496f;padding:10px;white-space:nowrap}
+  .history-table tbody :is(td,th){padding:9px 10px;vertical-align:top;border-top:1px solid #e1e8f0}
+  .history-table tbody tr:nth-child(even){background:#f7faff}
+  .history-table tbody :is(td,th) small{display:block;color:#526881;font-size:.75rem;font-weight:450;overflow-wrap:anywhere}
+  .history-table :is(td,th):is(:nth-child(4),:nth-child(5)){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .history-company{min-width:150px}
+  .history-detail summary{cursor:pointer;color:#164c80;font-weight:650;white-space:nowrap}
+  .history-detail-body{min-width:140px;margin-top:5px;color:#354b62;font-size:.8rem}
+  .history-detail-body ul{padding-left:15px;margin:3px 0}
+  .history-detail-body .actions{margin-top:6px}
+  #history-list h3{margin-top:8px}
+
 </style>
 </head>
 <body>
@@ -782,6 +814,10 @@ function historyCard(record,review) {
   const by=[dateText(record.date),record.salesperson,money(totalsForRecord.net,uiLang(),record.currency),totalsForRecord.units+' '+t('units')];
   if(totalsForRecord.monthly) by.push(t('monthly')+' '+money(totalsForRecord.monthly,uiLang(),record.currency));
   details.append(element('small',by.join(' · ')),element('small',t(record.status),record.status==='pending'?'pending':''));
+  item.append(details,historyActions(record,review));
+  return item;
+}
+function historyActions(record,review) {
   const actions=element('div',undefined,'actions');
   actions.append(action(t('duplicate'),()=>copyRecord(record)));
   if (record.status!=='pending') actions.append(action(t('pdf'),()=>printSaved(record)));
@@ -790,8 +826,7 @@ function historyCard(record,review) {
     if (persist(records.map(item=>item.number===record.number?{...item,status:'approved'}:item))) refresh();
     else window.alert(t('storageError'));
   }));
-  item.append(details,actions);
-  return item;
+  return actions;
 }
 const distanceOrigin = [49.68537, 18.34838];
 // Zippopotam.us provides approximate postal-code centres from GeoNames.
@@ -902,53 +937,130 @@ const archiveLabels = {
     note:'Warianty, ceny orientacyjne i zastąpione wersje nie są sumowane. Wartość ofert nie oznacza przychodu.',
     authored:'Autor niepodany w dokumencie',folder:'data folderu',file:'data utworzenia PDF',items:'Pozycje cenowe',valid:'Ważna do'}
 };
-function renderArchiveSummary(rows, target, includeList) {
+const historyLayout = {
+  cs:{company:'Klient / nabídka',date:'Datum',seller:'Obchodník',units:'Počet ks',price:'Celková cena',details:'Detaily',saved:'Nabídky z tohoto prohlížeče',trend:'Dokumenty podle měsíce',noDate:'Bez data'},
+  pl:{company:'Klient / oferta',date:'Data',seller:'Handlowiec',units:'Liczba szt.',price:'Cena całkowita',details:'Szczegóły',saved:'Oferty z tej przeglądarki',trend:'Dokumenty według miesiąca',noDate:'Bez daty'}
+};
+function makeHistoryTable(rows, heading) {
+  const ui=historyLayout[uiLang()];
+  const shell=element('div',undefined,'history-table-wrap');
+  shell.tabIndex=0;
+  shell.setAttribute('role','region');
+  shell.setAttribute('aria-label',heading);
+  const table=element('table',undefined,'history-table');
+  const header=table.createTHead().insertRow();
+  for (const label of [ui.company,ui.date,ui.seller,ui.units,ui.price,ui.details]) {
+    const cell=element('th',label);
+    cell.scope='col';
+    header.append(cell);
+  }
+  const body=table.createTBody();
+  for (const row of [...rows].sort((a,b)=>(b.date||'').localeCompare(a.date||''))) {
+    const line=body.insertRow();
+    const title=element('th',undefined,'history-company');
+    title.scope='row';
+    title.append(element('strong',row.client),element('small',row.number));
+    line.append(title);
+    const date=line.insertCell();
+    date.append(element('span',row.date?dateText(row.date):'—'));
+    if (row.dateSource) date.append(element('small',row.dateSource));
+    line.insertCell().textContent=row.seller||'—';
+    line.insertCell().textContent=row.units??'—';
+    const price=line.insertCell();
+    price.append(element('strong',row.price));
+    if (row.basis) price.append(element('small',row.basis));
+    line.insertCell().append(row.details);
+  }
+  shell.append(table);
+  return shell;
+}
+function historyTrend(rows) {
+  const ui=historyLayout[uiLang()];
+  const counts=new Map();
+  for (const row of rows) {
+    const month=row.date?row.date.slice(0,7):'';
+    counts.set(month,(counts.get(month)??0)+1);
+  }
+  const months=[...counts.keys()].filter(Boolean).sort();
+  if (counts.has('')) months.push('');
+  const chart=element('section',undefined,'archive-trend');
+  const bars=element('ul',undefined,'archive-bars');
+  const max=Math.max(...counts.values());
+  const formatter=new Intl.DateTimeFormat(uiLang(),{month:'short',year:'2-digit',timeZone:'UTC'});
+  for (const month of months) {
+    const value=counts.get(month);
+    const label=month?formatter.format(new Date(month+'-01T00:00:00Z')):ui.noDate;
+    const item=element('li');
+    const track=element('span',undefined,'archive-bar-track');
+    const bar=element('span',undefined,month?'archive-bar':'archive-bar undated');
+    bar.style.height=(value/max*100)+'%';
+    track.setAttribute('aria-hidden','true');
+    track.append(bar);
+    item.append(element('strong',value),track,element('span',label));
+    bars.append(item);
+  }
+  chart.append(element('h3',ui.trend),bars);
+  return chart;
+}
+function archivedHistoryRow(row) {
+  const labels=archiveLabels[uiLang()];
+  const ui=historyLayout[uiLang()];
+  const details=element('details',undefined,'history-detail');
+  const content=element('div',undefined,'history-detail-body');
+  content.append(element('strong',[row.product,labels.state[row.status]].filter(Boolean).join(' · ')));
+  if (row.monthly!==null) content.append(element('p',t('monthly')+' · '+money(row.monthly,uiLang(),row.currency)));
+  if (row.validity) content.append(element('p',labels.valid+' · '+dateText(row.validity)));
+  if (row.items.length) {
+    const items=element('ul');
+    for (const item of row.items) {
+      items.append(element('li',[item.label,item.qty===null?'':item.qty+' ×',money(item.value,uiLang(),row.currency)].filter(Boolean).join(' · ')));
+    }
+    content.append(element('p',labels.items),items);
+  }
+  details.append(element('summary',ui.details),content);
+  return {client:row.client,number:row.number||row.title,date:row.date,dateSource:labels[row.dateSource],
+    seller:row.salesperson,units:row.units,price:row.amount===null?'—':money(row.amount,uiLang(),row.currency),
+    basis:labels.basis[row.basis],details};
+}
+function savedHistoryRow(record) {
+  const total=totals(record);
+  const details=element('details',undefined,'history-detail');
+  const content=element('div',undefined,'history-detail-body');
+  content.append(element('p',t(record.status)));
+  if (total.monthly) content.append(element('p',t('monthly')+' · '+money(total.monthly,uiLang(),record.currency)));
+  content.append(historyActions(record,true));
+  details.append(element('summary',historyLayout[uiLang()].details),content);
+  return {client:record.client.name,number:record.number,date:record.date,seller:record.salesperson,units:total.units,
+    price:money(total.net,uiLang(),record.currency),basis:archiveLabels[uiLang()].basis.net,details};
+}
+
+function renderArchiveSummary(rows,target,includeList) {
   const labels=archiveLabels[uiLang()];
   target.hidden=!rows.length;
   target.replaceChildren();
-  if(!rows.length) return;
-  const clean=rows.filter(q=>q.status==='archive' && q.amount!==null);
+  if (!rows.length) return;
+  const clean=rows.filter(row=>row.status==='archive'&&row.amount!==null);
   const values=[
-    [labels.count,rows.length],
+    ['count',rows.length],
     ...['net','gross'].map(basis=>{
       const entries=clean.filter(row=>row.basis===basis);
-      return [labels[basis],entries.length?money(entries.reduce((sum,row)=>sum+row.amount,0),uiLang(),'PLN'):null];
+      return [basis,entries.length?money(entries.reduce((sum,row)=>sum+row.amount,0),uiLang(),'PLN'):null];
     }),
-    [labels.units,clean.some(row=>row.units!==null)?clean.reduce((sum,row)=>sum+(row.units??0),0):null],
-    [labels.monthly,clean.some(row=>row.monthly!==null)?money(clean.reduce((sum,row)=>sum+(row.monthly??0),0),uiLang(),'PLN'):null]
+    ['units',clean.some(row=>row.units!==null)?clean.reduce((sum,row)=>sum+(row.units??0),0):null],
+    ['monthly',clean.some(row=>row.monthly!==null)?money(clean.reduce((sum,row)=>sum+(row.monthly??0),0),uiLang(),'PLN'):null]
   ];
-  const stats=element('dl',undefined,'dash-money');
-  for(const [label,value] of values){
-    if(value===null) continue;
-    const line=element('div');
-    line.append(element('dt',label),element('dd',value));
-    stats.append(line);
+  const stats=element('dl',undefined,'archive-kpis');
+  for (const [metric,value] of values) {
+    if (value===null) continue;
+    const card=element('div',undefined,'archive-kpi');
+    card.dataset.metric=metric;
+    card.append(element('dt',labels[metric]),element('dd',value));
+    stats.append(card);
   }
-  target.append(element('h2',labels.title),stats,element('p',labels.note,'hint'));
-  if(!includeList) return;
-  const list=element('div',undefined,'list');
-  for(const row of [...rows].sort((a,b)=>b.date.localeCompare(a.date))){
-    const card=element('article',undefined,'record');
-    const details=element('div');
-    const when=row.date ? dateText(row.date)+(row.dateSource==='document'?'':' ('+labels[row.dateSource]+')') : '';
-    const cost=row.amount===null ? labels.basis[row.basis] : money(row.amount,uiLang(),row.currency)+' '+labels.basis[row.basis];
-    details.append(element('strong',row.client+' · '+(row.number||row.title)),
-      element('small',[when,row.product,cost,labels.state[row.status]].filter(Boolean).join(' · ')),
-      element('small',[row.salesperson||labels.authored,row.units===null?'':labels.units+' '+row.units,
-        row.monthly===null?'':labels.monthly+' '+money(row.monthly,uiLang(),row.currency),
-        row.validity?labels.valid+' '+dateText(row.validity):''].filter(Boolean).join(' · ')));
-    if(row.items.length){
-      const expandable=element('details');
-      expandable.append(element('summary',labels.items));
-      for(const item of row.items){
-        expandable.append(element('small',[item.label,item.qty===null?'':String(item.qty),money(item.value,uiLang(),row.currency)].filter(Boolean).join(' · ')));
-      }
-      details.append(expandable);
-    }
-    card.append(details);
-    list.append(card);
-  }
-  target.append(list);
+  target.append(element('h2',labels.title),stats);
+  if (includeList) target.append(historyTrend(rows));
+  target.append(element('p',labels.note,'hint'));
+  if (includeList) target.append(makeHistoryTable(rows.map(archivedHistoryRow),labels.title));
 }
 function showImportedHistory(current,filter) {
   const matches=(row,client)=>norm(row.client)===norm(client.name);
@@ -997,11 +1109,15 @@ function renderHistory() {
   const filters=clients().map(client=>[clientKey(client),client.name]);
   replaceOptions(el('history-client'),[['',t('all')],...filters]);
   const filter=clients().find(client=>clientKey(client)===el('history-client').value);
-  const all=records.filter(record=>!filter||sameClient(record.client,filter)).map(record=>historyCard(record,true));
+  const all=records.filter(record=>!filter||sameClient(record.client,filter));
   const current=currentClient();
   const clientHistory=records.filter(record=>sameClient(record.client,current));
   const old=clientHistory.map(record=>historyCard(record,false));
-  el('history-list').replaceChildren(...(all.length?all:[element('p',t('none'),'empty')]));
+  const local=el('history-list');
+  local.hidden=!all.length&&importedHistory.some(row=>!filter||norm(row.client)===norm(filter.name));
+  const localTitle=historyLayout[uiLang()].saved;
+  local.replaceChildren(element('h3',localTitle),all.length?
+    makeHistoryTable(all.map(savedHistoryRow),localTitle):element('p',t('none'),'empty'));
   el('customer-records').replaceChildren(...(old.length?old:[element('p',t('none'),'empty')]));
   el('client-history').hidden=!current.name&&!current.tax;
   renderClientDashboard(current,clientHistory);
