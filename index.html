@@ -67,6 +67,10 @@
       </section>
       <section class="panel" aria-labelledby="client-heading"><h2 id="client-heading" data-t="clientSection">Klient i oferta</h2>
         <div class="fields">
+          <div class="wide">
+            <label><span data-t="findClient"></span><input id="client-search" type="search" autocomplete="off" aria-controls="client-results"></label>
+            <div id="client-results" class="actions" hidden></div>
+          </div>
           <label class="wide"><span data-t="client">Klient</span><select id="client"><option value="alpha">Demo Logistics Sp. z o.o.</option><option value="beta">Demo Transport s.r.o.</option><option value="custom" data-t="custom">Wpisz klienta</option></select></label>
           <label class="wide" id="custom-client" hidden><span data-t="company">Nazwa firmy</span><input id="company" maxlength="120" autocomplete="organization"></label>
           <label><span data-t="tax">NIP / IČO</span><input id="tax" maxlength="30"></label>
@@ -119,6 +123,7 @@ const words = {
   pl: {
     language:'Język interfejsu',quoteLanguage:'Język oferty',title:'Generator ofert GX',demo:'Demo. Używaj przykładowych danych. Historia jest zapisywana tylko w tej przeglądarce.',
     clientSection:'Klient i oferta',client:'Klient',custom:'Dodaj klienta',company:'Nazwa firmy',tax:'NIP / IČO',number:'Numer oferty',validity:'Ważna do',currency:'Waluta',
+    findClient:'Szukaj klienta po nazwie, NIP lub miejscowości',noClientMatch:'Nie znaleziono klienta.',
     installation:'Konfiguracja pozycji',vehicle:'Nazwa pozycji',qty:'Ilość',components:'Komponenty i ceny za jednostkę',unitTotal:'Cena za jednostkę',description:'Opis funkcji w języku oferty',
     includeService:'Dodaj miesięczny abonament',servicePerVehicle:'Miesięcznie za jednostkę',preview:'Podgląd oferty',pdf:'Zapisz jako PDF',quote:'Oferta cenowa',
     oneTime:'Opłaty jednorazowe',monthly:'Opłaty miesięczne',item:'Pozycja',count:'Ilość',unitPrice:'Cena jedn.',subtotal:'Razem',service:'Abonament',
@@ -140,6 +145,7 @@ const words = {
   cs: {
     language:'Jazyk aplikace',quoteLanguage:'Jazyk nabídky',title:'Generátor nabídek GX',demo:'Demo. Používej ukázková data. Historie se ukládá jen v tomto prohlížeči.',
     clientSection:'Klient a nabídka',client:'Klient',custom:'Přidat klienta',company:'Název firmy',tax:'IČO / NIP',number:'Číslo nabídky',validity:'Platnost do',currency:'Měna',
+    findClient:'Hledat klienta podle názvu, NIP nebo města',noClientMatch:'Žádný odpovídající klient.',
     installation:'Konfigurace položky',vehicle:'Název položky',qty:'Počet kusů',components:'Komponenty a ceny za jednotku',unitTotal:'Cena za jednotku',description:'Popis funkcí v jazyce nabídky',
     includeService:'Přidat měsíční paušál',servicePerVehicle:'Měsíčně za jednotku',preview:'Náhled nabídky',pdf:'Uložit jako PDF',quote:'Cenová nabídka',
     oneTime:'Jednorázové platby',monthly:'Měsíční platby',item:'Položka',count:'Počet',unitPrice:'Cena za kus',subtotal:'Celkem',service:'Měsíční paušál',
@@ -244,7 +250,76 @@ function sameClient(a,b) {
   return a.tax && b.tax ? norm(a.tax)===norm(b.tax) : norm(a.name)!=='' && norm(a.name)===norm(b.name);
 }
 function clients() {
-  return [...new Map([...initialClients,...records.slice().reverse().map(record=>record.client),...savedClients].map(client=>[clientKey(client),client])).values()];
+  const entries=[...initialClients,...records.slice().reverse().map(record=>record.client),...savedClients];
+  const knownNames=new Set(savedClients.filter(client=>client.tax).map(client=>norm(client.name)));
+  return [...new Map(entries.filter(client=>client.tax||!knownNames.has(norm(client.name)))
+    .map(client=>[clientKey(client),client])).values()]
+    .sort((a,b)=>a.name.localeCompare(b.name,uiLang()));
+}
+function searchable(value) {
+  return value.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/ł/g,'l');
+}
+function clientMatches(query) {
+  const terms=searchable(query).trim().split(/\s+/).filter(Boolean);
+  if(!terms.length) return [];
+  return clients().filter(client=>{
+    const text=searchable([client.name,client.tax,client.address].join(' '));
+    return terms.every(term=>text.includes(term));
+  });
+}
+function chooseClient(key) {
+  el('client-search').value='';
+  el('client').value=key;
+  touch();
+  selectClient();
+  renderClientSearch();
+  renderHistory();
+  refreshQuote();
+}
+function renderClientSearch() {
+  const query=el('client-search').value.trim();
+  const results=el('client-results');
+  results.hidden=!query;
+  const matches=clientMatches(query).slice(0,8);
+  results.replaceChildren(...(matches.length?
+    matches.map(client=>action(client.name,()=>chooseClient(clientKey(client)))):
+    [element('p',t('noClientMatch'),'hint')]));
+}
+function receiveClientCatalog() {
+  const nonce=location.hash.match(/^#gx-client-setup=([a-f0-9]{32})$/)?.[1];
+  const sender=window.opener;
+  if(!nonce||!sender) return;
+  history.replaceState(null,'',location.pathname+location.search);
+  function receive(event) {
+    const message=event.data;
+    if(event.source!==sender||event.origin!=='null'||message?.type!=='gx-client-catalog'||message.nonce!==nonce) return;
+    const rows=message.clients;
+    if(!Array.isArray(rows)||!rows.length||rows.length>2000||!rows.every(row=>
+      typeof row?.name==='string'&&row.name.trim()&&row.name.length<=300&&
+      typeof row.tax==='string'&&(!row.tax||validNip(row.tax))&&
+      typeof row.address==='string'&&row.address.length<=700)) return;
+    window.removeEventListener('message',receive);
+    const updated=new Map(savedClients.map(client=>[norm(client.name),client]));
+    for(const {name,tax,address} of rows){
+      const key=norm(name);
+      const previous=updated.get(key);
+      updated.set(key,{name,tax:tax||previous?.tax||'',address:address||previous?.address||''});
+    }
+    try {
+      const next=[...updated.values()];
+      localStorage.setItem(clientsKey,JSON.stringify(next));
+      const selected=[...updated.values()].find(client=>norm(client.name)===norm(currentClient().name));
+      savedClients=next;
+      refresh();
+      if(selected) chooseClient(clientKey(selected));
+      sender.postMessage({type:'gx-client-catalog-saved',nonce,count:rows.length},'*');
+    } catch {
+      sender.postMessage({type:'gx-client-catalog-failed',nonce},'*');
+    }
+  }
+  window.addEventListener('message',receive);
+  window.setTimeout(()=>window.removeEventListener('message',receive),20000);
+  sender.postMessage({type:'gx-client-catalog-ready',nonce},'*');
 }
 function currentClient() {
   return {name:el('company').value.trim(),tax:el('tax').value.trim(),address:el('address').value.trim()};
@@ -576,6 +651,7 @@ function refresh() {
   });
   replaceOptions(el('product'),[['',t('pickProduct')],...Object.entries(products).map(([id,product])=>[id,loc(product.name,uiLang())])]);
   replaceOptions(el('client'),[...clients().map(client=>[clientKey(client),client.name]),['custom',t('custom')]]);
+  renderClientSearch();
   renderGroup();
   renderHistory();
   refreshQuote();
@@ -630,7 +706,18 @@ el('history-tab').addEventListener('click',()=>setView('history'));
 el('history-client').addEventListener('change',renderHistory);
 el('language').addEventListener('change',refresh);
 el('editor').addEventListener('submit',event=>event.preventDefault());
-el('client').addEventListener('change',()=>{touch();selectClient();renderHistory();refreshQuote();});
+el('client').addEventListener('change',()=>chooseClient(el('client').value));
+el('client-search').addEventListener('input',renderClientSearch);
+el('client-search').addEventListener('keydown',event=>{
+  if(event.key==='Escape'){
+    el('client-search').value='';
+    renderClientSearch();
+  }
+  if(event.key!=='Enter') return;
+  event.preventDefault();
+  const first=clientMatches(el('client-search').value)[0];
+  if(first) chooseClient(clientKey(first));
+});
 for(const id of ['company','address']) el(id).addEventListener('input',()=>{touch();renderHistory();refreshQuote();});
 el('tax').addEventListener('input',()=>{
   touch();renderHistory();refreshQuote();
@@ -703,6 +790,7 @@ refresh();
 selectClient();
 renderHistory();
 refreshQuote();
+receiveClientCatalog();
 </script>
 </body>
 </html>
