@@ -16,6 +16,7 @@
   .preview{overflow:hidden;position:sticky;top:16px}.toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}button{background:var(--brand);border:1px solid var(--brand);color:#fff;border-radius:7px;padding:8px 12px;font-weight:750}button:hover{background:#073971}.paper-wrap{padding:20px;background:#e7eef6}.paper{background:white;padding:clamp(15px,3vw,34px);border:1px solid #ccd7e5;box-shadow:0 5px 12px #132a4820;min-height:485px;font-size:.87rem}.dochead{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:3px solid var(--brand);padding-bottom:13px}.docbrand img{display:block;width:115px;height:35px;object-fit:contain}.docbrand strong{display:block;margin-top:4px;font-size:.76rem}.dochead h3{color:var(--navy);font-size:clamp(1.2rem,2.5vw,1.65rem);line-height:1.15;text-align:right}.meta{display:grid;grid-template-columns:1fr 1fr;gap:11px 16px;margin:17px 0}.meta dt{color:var(--muted);font-size:.81rem}.meta dd{margin:1px 0 0;font-weight:650;overflow-wrap:anywhere}.doc-section{margin-top:19px}.doc-section h4{margin:0 0 5px;font-size:.93rem}.offer-table{width:100%;border-collapse:collapse;table-layout:fixed}.offer-table th,.offer-table td{border-bottom:1px solid var(--line);padding:7px 4px;vertical-align:top;overflow-wrap:anywhere}.offer-table th{background:var(--blue-soft);color:var(--navy);font-weight:700;text-align:left}.offer-table :is(th,td):not(:first-child){text-align:right}.offer-table col:first-child{width:44%}.offer-table col:nth-child(2){width:10%}.offer-table col:nth-child(3),.offer-table col:nth-child(4){width:23%}.offer-table td:first-child small{display:block;color:var(--muted);white-space:pre-wrap;font-size:.83rem;margin-top:4px}.doc-footer{border-top:1px solid var(--line);padding-top:11px;margin-top:23px;color:var(--muted);font-size:.84rem}.demo-watermark{font-weight:750;color:var(--brand);margin-top:4px}.status{margin-top:10px;color:#7e2d16;font-size:.9rem}.status:empty{display:none}
   @media(max-width:940px){.layout{grid-template-columns:1fr}.preview{position:static}.paper{min-height:0}.intro{align-items:start}}@media(max-width:475px){.masthead{padding:13px 14px}.identity{gap:6px}.locale>span{display:none}.fields{grid-template-columns:1fr}.panel{padding:15px}.paper-wrap{padding:9px}.paper{padding:12px}.offer-table th,.offer-table td{font-size:.79rem}.offer-table td:first-child small{font-size:.77rem}}
   .tabs,.actions,.product-picker,.groups{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.tabs{margin:0 0 16px}.secondary{background:white;color:var(--brand);border-color:#adc2dd}.secondary:hover{background:var(--blue-soft)}.tabs .secondary[aria-pressed="true"],.groups button[aria-pressed="true"]{background:var(--brand);color:white}.groups{margin:12px 0}.product-picker label{flex:1 1 170px}.product-picker button{align-self:end}.group-fields{border:0;padding:0;margin:0;min-width:0}.part-price{min-width:105px;width:100%;font-size:.85rem}.component .part-price input{width:100%;height:auto;margin:0}.component{grid-template-columns:minmax(0,1fr) minmax(106px,30%)}.component small{display:block;color:var(--muted);font-size:.78rem}.demo-contact{margin-top:12px}.list{display:grid;gap:8px;margin-top:12px}.record{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px;border:1px solid var(--line);border-radius:7px}.record small{display:block;color:var(--muted);font-size:.86rem}.record .actions button{font-size:.85rem}.total strong{color:var(--brand)}.summary{background:var(--blue-soft);padding:12px;border-radius:7px;margin-top:10px}.summary .total{margin-top:5px;padding-top:5px}.pending{color:#7e2d16}.doc-totals{margin-top:9px;display:grid;gap:4px}.doc-totals p{display:flex;justify-content:space-between;gap:8px}.paper tr{break-inside:avoid}.toolbar{flex-wrap:wrap}button:disabled{opacity:.55;cursor:not-allowed}.empty{color:var(--muted);padding:8px 0}.panel .actions{margin-top:12px}
+  #configuration{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}.group-fields>legend{margin-bottom:10px}.record strong{overflow-wrap:anywhere}
   @page{size:A4;margin:17mm}
   @media print{body,main,.paper-wrap,.paper{background:#fff}.masthead,.intro,.tabs,.editor,.toolbar,.status,.history{display:none!important}main,.layout,.preview,.paper-wrap,.paper{display:block;position:static;margin:0;padding:0;max-width:none;width:100%;min-height:0;border:0;box-shadow:none;overflow:visible}.paper{font-size:10pt;print-color-adjust:exact}.dochead,.meta,.doc-totals,.doc-footer{break-inside:avoid}.dochead h3{font-size:18pt}body[data-printable="false"] main{display:none!important}}
 </style>
@@ -37,8 +38,32 @@
   <div class="layout" id="builder">
     <form class="editor" id="editor">
       <section class="panel" aria-labelledby="product-heading">
-        <h2 id="product-heading" data-t="product"></h2>
-        <div class="product-picker"><label><span data-t="pickProduct"></span><select id="product"></select></label><button id="add-product" type="button" class="secondary" data-t="addProduct"></button></div>
+        <h2 id="product-heading" data-t="quoteItems"></h2>
+        <div class="list" id="groups"></div>
+        <div class="actions"><button id="add-product" type="button" class="secondary" data-t="addProduct"></button></div>
+        <div id="configuration" hidden>
+          <fieldset class="group-fields" id="group-fields" disabled>
+            <legend id="install-heading" class="field-label" data-t="installation"></legend>
+            <div class="fields">
+              <label class="wide"><span data-t="vehicle"></span><input id="vehicle" maxlength="85" required></label>
+              <label><span data-t="pickProduct"></span><select id="product" required></select></label>
+              <label><span data-t="qty"></span><input id="quantity" type="number" min="1" max="999" step="1" value="1" required></label>
+            </div>
+            <div id="item-options" hidden>
+              <fieldset class="catalog"><legend class="field-label" data-t="components"></legend><div id="components"></div></fieldset>
+              <div class="total"><span data-t="unitTotal"></span><output id="unit-total"></output></div>
+              <label><span data-t="description"></span><textarea id="description" maxlength="320"></textarea></label>
+              <label class="component"><span data-t="includeService"></span><input type="checkbox" id="service-enabled"></label>
+              <div id="service-field"><label><span data-t="servicePerVehicle"></span><input id="service-price" type="number" min="0" step="0.01" required></label></div>
+            </div>
+            <div class="actions">
+              <button id="commit-item" type="button" data-t="commitItem"></button>
+              <button id="cancel-item" class="secondary" type="button" data-t="cancelItem"></button>
+              <button id="remove-product" class="secondary" type="button" data-t="removeProduct" hidden></button>
+            </div>
+            <p id="item-status" class="status" role="status"></p>
+          </fieldset>
+        </div>
       </section>
       <section class="panel" aria-labelledby="client-heading"><h2 id="client-heading" data-t="clientSection">Klient i oferta</h2>
         <div class="fields">
@@ -55,21 +80,6 @@
           <label><span data-t="salesperson"></span><select id="salesperson"><option>Demo Sales 1</option><option>Demo Sales 2</option></select></label>
         </div>
         <div class="demo-contact" id="client-history"><h3 data-t="clientHistory"></h3><div class="list" id="customer-records"></div></div>
-      </section>
-      <section class="panel" id="configuration" aria-labelledby="install-heading" hidden><h2 id="install-heading" data-t="installation">Konfiguracja produktu</h2>
-        <div class="groups" id="groups"></div>
-        <fieldset class="group-fields" id="group-fields" hidden>
-        <div class="fields">
-          <label><span data-t="vehicle">Pojazd / oznaczenie</span><input id="vehicle" maxlength="85" placeholder="np. Škoda Octavia"></label>
-          <label><span data-t="qty">Liczba pojazdów</span><input id="quantity" type="number" min="1" max="999" step="1" value="1" required></label>
-        </div>
-        <fieldset class="catalog"><legend class="field-label" data-t="components">Komponenty na pojazd (wewnętrzne)</legend><div id="components"></div></fieldset>
-        <div class="total"><span data-t="unitTotal">Cena za jednostkę</span><output id="unit-total"></output></div>
-        <label><span data-t="description">Opis dostarczanych funkcji</span><textarea id="description" maxlength="320"></textarea></label>
-        <label class="component"><span data-t="includeService">Dodaj miesięczny abonament</span><input type="checkbox" id="service-enabled" checked></label>
-        <div id="service-field"><label><span data-t="servicePerVehicle">Miesięcznie za jednostkę</span><input id="service-price" type="number" min="0" step="0.01" required></label></div>
-        <div class="actions"><button id="remove-product" class="secondary" type="button" data-t="removeProduct"></button></div>
-        </fieldset>
       </section>
       <section class="panel" aria-labelledby="discount-heading"><h2 id="discount-heading" data-t="discount"></h2>
         <label><span data-t="discountAmount"></span><input id="discount" type="number" min="0" step="0.01" value="0" required></label>
@@ -109,11 +119,12 @@ const words = {
   pl: {
     language:'Język interfejsu',quoteLanguage:'Język oferty',title:'Generator ofert GX',demo:'Demo. Używaj przykładowych danych. Historia jest zapisywana tylko w tej przeglądarce.',
     clientSection:'Klient i oferta',client:'Klient',custom:'Dodaj klienta',company:'Nazwa firmy',tax:'NIP / IČO',number:'Numer oferty',validity:'Ważna do',currency:'Waluta',
-    installation:'Konfiguracja produktu',vehicle:'Model / oznaczenie',qty:'Liczba jednostek',components:'Komponenty i ceny za jednostkę',unitTotal:'Cena za jednostkę',description:'Opis funkcji w języku oferty',
+    installation:'Konfiguracja pozycji',vehicle:'Nazwa pozycji',qty:'Ilość',components:'Komponenty i ceny za jednostkę',unitTotal:'Cena za jednostkę',description:'Opis funkcji w języku oferty',
     includeService:'Dodaj miesięczny abonament',servicePerVehicle:'Miesięcznie za jednostkę',preview:'Podgląd oferty',pdf:'Zapisz jako PDF',quote:'Oferta cenowa',
     oneTime:'Opłaty jednorazowe',monthly:'Opłaty miesięczne',item:'Pozycja',count:'Ilość',unitPrice:'Cena jedn.',subtotal:'Razem',service:'Abonament',
     vat:'Ceny netto, bez VAT.',demoPdf:'Wersja demonstracyjna. Ceny przykładowe.',newQuote:'Nowa oferta',history:'Historia',historyHint:'Historia lokalna. Zatwierdzanie zniżek jest symulacją.',
-    salesperson:'Handlowiec (demo)',clientHistory:'Poprzednie oferty klienta',product:'Produkt',addProduct:'Dodaj produkt',removeProduct:'Usuń pozycję',pickProduct:'Wybierz produkt',
+    salesperson:'Handlowiec (demo)',clientHistory:'Poprzednie oferty klienta',quoteItems:'Pozycje oferty',addProduct:'+ Dodaj pozycję',removeProduct:'Usuń pozycję',pickProduct:'Wybierz produkt',
+    commitItem:'Dodaj do oferty',updateItem:'Zapisz pozycję',cancelItem:'Anuluj',editItem:'Edytuj',nameRequired:'Wpisz nazwę pozycji.',
     minPart:'Minimum',sellPrice:'Cena ofertowa',discount:'Rabat',discountAmount:'Łączny rabat jednorazowy',minimum:'Minimum jednorazowe',netTotal:'Razem jednorazowo netto',
     below:'Cena końcowa jest poniżej minimum. Oferta wymaga zgody kierownika.',invalidDiscount:'Rabat nie może przekraczać wartości jednorazowej oferty.',
     save:'Zapisz ofertę',request:'Zapisz do zatwierdzenia',saved:'Oferta zapisana.',pending:'Oczekuje na zatwierdzenie',approved:'Rabat zatwierdzony (demo)',
@@ -129,11 +140,12 @@ const words = {
   cs: {
     language:'Jazyk aplikace',quoteLanguage:'Jazyk nabídky',title:'Generátor nabídek GX',demo:'Demo. Používej ukázková data. Historie se ukládá jen v tomto prohlížeči.',
     clientSection:'Klient a nabídka',client:'Klient',custom:'Přidat klienta',company:'Název firmy',tax:'IČO / NIP',number:'Číslo nabídky',validity:'Platnost do',currency:'Měna',
-    installation:'Konfigurace produktu',vehicle:'Model / označení',qty:'Počet jednotek',components:'Komponenty a ceny za jednotku',unitTotal:'Cena za jednotku',description:'Popis funkcí v jazyce nabídky',
+    installation:'Konfigurace položky',vehicle:'Název položky',qty:'Počet kusů',components:'Komponenty a ceny za jednotku',unitTotal:'Cena za jednotku',description:'Popis funkcí v jazyce nabídky',
     includeService:'Přidat měsíční paušál',servicePerVehicle:'Měsíčně za jednotku',preview:'Náhled nabídky',pdf:'Uložit jako PDF',quote:'Cenová nabídka',
     oneTime:'Jednorázové platby',monthly:'Měsíční platby',item:'Položka',count:'Počet',unitPrice:'Cena za kus',subtotal:'Celkem',service:'Měsíční paušál',
     vat:'Ceny jsou uvedeny bez DPH.',demoPdf:'Ukázková nabídka. Testovací ceny.',newQuote:'Nová nabídka',history:'Historie',historyHint:'Historie v tomto prohlížeči. Schválení slevy je simulace.',
-    salesperson:'Obchodník (demo)',clientHistory:'Předchozí nabídky klienta',product:'Produkt',addProduct:'Přidat produkt',removeProduct:'Odebrat položku',pickProduct:'Vyber produkt',
+    salesperson:'Obchodník (demo)',clientHistory:'Předchozí nabídky klienta',quoteItems:'Položky nabídky',addProduct:'+ Přidat položku',removeProduct:'Odebrat položku',pickProduct:'Vyber produkt',
+    commitItem:'Přidat do nabídky',updateItem:'Uložit položku',cancelItem:'Zrušit',editItem:'Upravit',nameRequired:'Zadej název položky.',
     minPart:'Minimum',sellPrice:'Prodejní cena',discount:'Sleva',discountAmount:'Celková jednorázová sleva',minimum:'Jednorázová minimální cena',netTotal:'Jednorázově celkem bez DPH',
     below:'Výsledná cena je pod minimem. Nabídka vyžaduje schválení vedoucím.',invalidDiscount:'Sleva nesmí překročit jednorázovou hodnotu nabídky.',
     save:'Uložit nabídku',request:'Uložit ke schválení',saved:'Nabídka uložena.',pending:'Čeká na schválení',approved:'Sleva schválena (demo)',
@@ -151,6 +163,7 @@ const words = {
 // The public demonstration uses sample prices in minor currency units.
 const parts = {
   gps:['Jednostka GPS','GPS jednotka',42000,250000],
+  antenna:['Antena GPS','GPS anténa',6500,39000],
   gsm:['Moduł GSM','GSM modul',9000,55000],
   wiring:['Wiązka i materiały','Kabeláž a materiál',7500,46000],
   install:['Montaż i uruchomienie','Montáž a zprovoznění',21500,130000],
@@ -165,10 +178,10 @@ const parts = {
   custom:['Pozycja dodatkowa','Ostatní položka',10000,60000]
 };
 const products = {
-  fleet:{name:'GX Fleet',scope:['Montaż systemu GX Fleet w pojeździe','Osazení vozidla systémem GX Fleet'],parts:['gps','gsm','wiring','install','can']},
-  truck:{name:'GX Truck',scope:['Montaż systemu GX Truck w ciężarówce','Osazení nákladního vozidla systémem GX Truck'],parts:['gps','gsm','can','fuel','wiring','install']},
-  build:{name:'GX Build',scope:['Montaż systemu GX Build na maszynie','Osazení stroje systémem GX Build'],parts:['rugged','gsm','hours','fuel','wiring','install']},
-  store:{name:'GX Store',scope:['Montaż systemu GX Store na wózku','Osazení vozíku systémem GX Store'],parts:['gps','reader','impact','can','wiring','install']},
+  fleet:{name:'GX Fleet',scope:['Montaż systemu GX Fleet w pojeździe','Osazení vozidla systémem GX Fleet'],parts:['gps','antenna','gsm','wiring','install','can']},
+  truck:{name:'GX Truck',scope:['Montaż systemu GX Truck w ciężarówce','Osazení nákladního vozidla systémem GX Truck'],parts:['gps','antenna','gsm','can','fuel','wiring','install']},
+  build:{name:'GX Build',scope:['Montaż systemu GX Build na maszynie','Osazení stroje systémem GX Build'],parts:['rugged','antenna','gsm','hours','fuel','wiring','install']},
+  store:{name:'GX Store',scope:['Montaż systemu GX Store na wózku','Osazení vozíku systémem GX Store'],parts:['gps','antenna','reader','impact','can','wiring','install']},
   safety:{name:'GX ActiveSafety',scope:['Wdrożenie GX ActiveSafety','Realizace GX ActiveSafety'],parts:['uwb','projection','reader','wiring','install']},
   other:{name:['Pozostałe','Ostatní'],scope:['Zakres dodatkowy','Ostatní dodávka'],parts:['custom','wiring','install']}
 };
@@ -203,7 +216,8 @@ if (!Array.isArray(savedClients)) savedClients=[];
 let lookupTimer;
 let lookupRequest;
 let groups=[];
-let selected=-1;
+let editingItem=null;
+let editingIndex=-1;
 let lastSaved=null;
 let view='builder';
 let currentCurrency=currency();
@@ -357,12 +371,20 @@ function draft() {
     currency:currency(),language:quoteLang(),groups:snapshots,discount:amount(el('discount'))};
 }
 function draftError(record) {
-  if (!record.groups.length || record.groups.some(group=>!group.items.length)) return 'noProducts';
-  const priceInvalid=groups.some(group=>!Number.isInteger(group.qty)||group.qty<1||group.qty>999||group.serviceEnabled&&group.service===null||
-    Object.entries(group.prices).some(([id,price])=>price===null||price<minimum(id)));
+  if (!groups.length) return 'noProducts';
+  const error=groups.map(groupError).find(Boolean);
+  if (error) return error;
   const total=totals(record);
-  if (priceInvalid||[total.gross,total.floor,total.monthly].some(n=>!Number.isSafeInteger(n))) return 'pricingError';
+  if ([total.gross,total.floor,total.monthly].some(n=>!Number.isSafeInteger(n))) return 'pricingError';
   if (record.discount===null||record.discount>total.gross) return 'invalidDiscount';
+  return '';
+}
+function groupError(group) {
+  const prices=Object.entries(group.prices);
+  if (!group.product||!prices.length) return 'noProducts';
+  if (!Number.isInteger(group.qty)||group.qty<1||group.qty>999||
+      group.serviceEnabled&&group.service===null||
+      prices.some(([id,price])=>price===null||price<minimum(id))) return 'pricingError';
   return '';
 }
 function renderPaper(record) {
@@ -408,15 +430,14 @@ function refreshQuote() {
   const under=!error && total.net<total.floor;
   const saved=records.find(item=>item.number===lastSaved);
   const pending=under && saved?.status!=='approved';
-  el('save').disabled=Boolean(saved);
+  el('save').disabled=Boolean(saved||editingItem);
   put('save',t(pending?'request':'save'));
   put('quote-min',money(total.floor));
   put('quote-total',money(total.net));
   put('approval-note',t(error&&error!=='noProducts'?error:pending?'below':under?'approved':'')??'');
-  const group=groups[selected];
-  if(group) put('unit-total',money(Object.values(group.prices).reduce((sum,price)=>sum+price,0)));
-  el('print').disabled=Boolean(error||pending);
-  document.body.dataset.printable=String(!error&&!pending&&el('editor').checkValidity()&&Boolean(record.client.name));
+  if(editingItem) put('unit-total',money(Object.values(editingItem.prices).reduce((sum,price)=>sum+price,0)));
+  el('print').disabled=Boolean(error||pending||editingItem);
+  document.body.dataset.printable=String(!error&&!pending&&!editingItem&&el('editor').checkValidity()&&Boolean(record.client.name));
   renderPaper(record);
 }
 function historyCard(record,review) {
@@ -449,25 +470,37 @@ function renderHistory() {
   el('client-history').hidden=!current.name&&!current.tax;
 }
 function renderGroup() {
-  const group=groups[selected];
+  const group=editingItem;
   el('configuration').hidden=!group;
-  el('group-fields').hidden=!group;
   el('group-fields').disabled=!group;
+  el('add-product').disabled=Boolean(group);
   el('groups').replaceChildren(...groups.map((item,index)=>{
-    const button=action(loc(products[item.product].name,uiLang())+' · '+(index+1),()=>{selected=index;renderGroup();refreshQuote();});
-    button.setAttribute('aria-pressed',String(index===selected));
-    return button;
+    const name=loc(products[item.product].name,uiLang());
+    const row=element('div',undefined,'record');
+    const details=element('div');
+    const unitPrice=Object.values(item.prices).reduce((sum,price)=>sum+price,0);
+    details.append(element('strong',item.label||name),element('small',[name,item.qty+' × '+money(unitPrice)].join(' · ')));
+    const button=action(t('editItem'),()=>openItem(index));
+    button.disabled=Boolean(group);
+    button.setAttribute('aria-label',t('editItem')+' · '+(item.label||name));
+    row.append(details,button);
+    return row;
   }));
   if(!group) return;
   el('vehicle').value=group.label;
+  el('vehicle').placeholder=uiLang()==='pl'?'np. Škoda Octavia':'např. Škoda Octavia';
+  el('product').value=group.product;
   el('quantity').value=group.qty??'';
+  el('item-options').hidden=!group.product;
+  el('remove-product').hidden=editingIndex<0;
+  put('commit-item',t(editingIndex<0?'commitItem':'updateItem'));
   el('description').value=group.descriptions[quoteLang()];
   el('description').lang=quoteLang();
   el('service-enabled').checked=group.serviceEnabled;
   el('service-price').value=group.service===null?'':group.service/100;
-  el('service-price').disabled=!group.serviceEnabled;
+  el('service-price').disabled=!group.product||!group.serviceEnabled;
   el('service-field').hidden=!group.serviceEnabled;
-  el('components').replaceChildren(...products[group.product].parts.map(id=>{
+  el('components').replaceChildren(...(products[group.product]?.parts??[]).map(id=>{
     const row=element('div',undefined,'component');
     const label=element('label');
     const checkbox=element('input');
@@ -491,12 +524,48 @@ function renderGroup() {
       else delete group.prices[id];
       price.value=floor/100;
       price.disabled=!checkbox.checked;
-      touch(); refreshQuote();
+      put('item-status','');refreshQuote();
     });
-    price.addEventListener('input',()=>{group.prices[id]=amount(price);touch();refreshQuote();});
+    price.addEventListener('input',()=>{group.prices[id]=amount(price);put('item-status','');refreshQuote();});
     row.append(label,price);
     return row;
   }));
+}
+function openItem(index=-1) {
+  if(editingItem) return;
+  editingIndex=index;
+  editingItem=index<0?
+    {product:'',label:'',qty:1,descriptions:{pl:'',cs:''},serviceEnabled:true,service:monthDefault(),prices:{}}:
+    structuredClone(groups[index]);
+  put('item-status','');
+  renderGroup();
+  refreshQuote();
+  el('vehicle').focus();
+}
+function closeItem() {
+  editingItem=null;
+  editingIndex=-1;
+  renderGroup();
+  refreshQuote();
+  el('add-product').focus();
+}
+function commitItem() {
+  if(!editingItem.label.trim()) {
+    put('item-status',t('nameRequired'));
+    el('vehicle').focus();
+    return;
+  }
+  const error=groupError(editingItem);
+  if(error) {
+    put('item-status',t(error));
+    if(!editingItem.product) el('product').focus();
+    return;
+  }
+  editingItem.label=editingItem.label.trim();
+  if(editingIndex<0) groups.push(editingItem);
+  else groups[editingIndex]=editingItem;
+  touch();
+  closeItem();
 }
 function refresh() {
   document.documentElement.lang=uiLang();
@@ -507,13 +576,12 @@ function refresh() {
   });
   replaceOptions(el('product'),[['',t('pickProduct')],...Object.entries(products).map(([id,product])=>[id,loc(product.name,uiLang())])]);
   replaceOptions(el('client'),[...clients().map(client=>[clientKey(client),client.name]),['custom',t('custom')]]);
-  el('add-product').disabled=!el('product').value;
   renderGroup();
   renderHistory();
   refreshQuote();
 }
 function copyRecord(record) {
-  if(groups.length&&!lastSaved&&!window.confirm(t('discard'))) return;
+  if((editingItem||groups.length&&!lastSaved)&&!window.confirm(t('discard'))) return;
   touch();
   newNumber();
   el('date').value=today(30);
@@ -526,7 +594,8 @@ function copyRecord(record) {
     service:group.service??monthDefault(),serviceEnabled:group.service!==null,
     prices:Object.fromEntries(group.items.map(item=>[item.id,Math.max(item.price,minimum(item.id))]))
   }));
-  selected=0;
+  editingItem=null;
+  editingIndex=-1;
   replaceOptions(el('client'),[...clients().map(client=>[clientKey(client),client.name]),['custom',t('custom')]],clientKey(record.client));
   selectClient();
   setView('builder');
@@ -535,6 +604,7 @@ function copyRecord(record) {
   window.scrollTo(0,0);
 }
 function saveRecord() {
+  if(editingItem) return;
   if(!el('editor').reportValidity()) return;
   const record=draft();
   if(!record.client.name) {el('company').focus();return;}
@@ -573,37 +643,34 @@ el('nip-lookup').addEventListener('click',lookupNip);
 el('save-client').addEventListener('click',saveClient);
 for(const id of ['date','salesperson','discount']) el(id).addEventListener('input',()=>{touch();refreshQuote();});
 el('quote-language').addEventListener('change',()=>{touch();renderGroup();refreshQuote();});
-el('product').addEventListener('change',()=>{el('add-product').disabled=!el('product').value;});
-el('add-product').addEventListener('click',()=>{
-  const product=el('product').value;
-  if(!product) return;
-  touch();
-  groups.push({product,label:'',qty:1,descriptions:{pl:'',cs:''},serviceEnabled:false,service:monthDefault(),prices:{}});
-  selected=groups.length-1;
+el('product').addEventListener('change',()=>{
+  editingItem.product=el('product').value;
+  editingItem.prices={};
+  put('item-status','');
   renderGroup();
   refreshQuote();
-  el('vehicle').focus();
 });
+el('add-product').addEventListener('click',()=>openItem());
+el('commit-item').addEventListener('click',commitItem);
+el('cancel-item').addEventListener('click',closeItem);
 el('remove-product').addEventListener('click',()=>{
   touch();
-  groups.splice(selected,1);
-  selected=Math.min(selected,groups.length-1);
-  renderGroup();
-  refreshQuote();
+  groups.splice(editingIndex,1);
+  closeItem();
 });
-el('vehicle').addEventListener('input',()=>{groups[selected].label=el('vehicle').value;touch();refreshQuote();});
-el('quantity').addEventListener('input',()=>{groups[selected].qty=el('quantity').validity.valid?el('quantity').valueAsNumber:null;touch();refreshQuote();});
-el('description').addEventListener('input',()=>{groups[selected].descriptions[quoteLang()]=el('description').value;touch();refreshQuote();});
-el('service-price').addEventListener('input',()=>{groups[selected].service=amount(el('service-price'));touch();refreshQuote();});
+el('vehicle').addEventListener('input',()=>{editingItem.label=el('vehicle').value;put('item-status','');});
+el('quantity').addEventListener('input',()=>{editingItem.qty=el('quantity').validity.valid?el('quantity').valueAsNumber:null;put('item-status','');});
+el('description').addEventListener('input',()=>{editingItem.descriptions[quoteLang()]=el('description').value;});
+el('service-price').addEventListener('input',()=>{editingItem.service=amount(el('service-price'));put('item-status','');});
 el('service-enabled').addEventListener('change',()=>{
-  groups[selected].serviceEnabled=el('service-enabled').checked;
-  touch();renderGroup();refreshQuote();
+  editingItem.serviceEnabled=el('service-enabled').checked;
+  put('item-status','');renderGroup();refreshQuote();
 });
 el('currency').addEventListener('change',()=>{
   if(currentCurrency===currency()) return;
   currentCurrency=currency();
   touch();
-  for(const group of groups) {
+  for(const group of editingItem?[...groups,editingItem]:groups) {
     for(const id of Object.keys(group.prices)) group.prices[id]=minimum(id);
     group.service=monthDefault();
   }
@@ -613,9 +680,10 @@ el('currency').addEventListener('change',()=>{
 });
 el('save').addEventListener('click',saveRecord);
 el('reset').addEventListener('click',()=>{
-  if(groups.length&&!lastSaved&&!window.confirm(t('discard'))) return;
+  if((editingItem||groups.length&&!lastSaved)&&!window.confirm(t('discard'))) return;
   groups=[];
-  selected=-1;
+  editingItem=null;
+  editingIndex=-1;
   lastSaved=null;
   el('product').value='';
   el('discount').value=0;
@@ -623,7 +691,7 @@ el('reset').addEventListener('click',()=>{
   newNumber();
   touch();
   refresh();
-  el('product').focus();
+  el('add-product').focus();
 });
 el('print').addEventListener('click',()=>{
   if(!el('editor').reportValidity()||document.body.dataset.printable!=='true') return;
