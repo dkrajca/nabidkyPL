@@ -90,6 +90,14 @@
     .paper .doc-section h4{break-after:avoid}
   }
   .secondary.remove-item{color:#9b3425;border-color:#e5b8b1}.secondary.remove-item:hover:enabled{background:#fbeeea}
+@media screen{
+  .client-dash .dash-card,.archive-panel{background:#f0f7ff;border-color:#c8dcef}
+  .client-dash .dash-card:nth-child(2){background:#edf7f2;border-color:#c9dfd5}
+  .client-dash .dash-card:nth-child(3){background:#f3f8fc;border-color:#ccddec}
+  .client-dash .dash-kpi{background:#fff;border:1px solid #d6e5f2}
+  .archive-panel .record{background:#fff}
+}
+
 </style>
 </head>
 <body>
@@ -104,6 +112,11 @@
     <h2 data-t="history"></h2>
     <label><span data-t="client"></span><select id="history-client"></select></label>
     <p class="hint" data-t="historyHint"></p>
+    <div class="actions">
+      <button type="button" class="secondary" id="archive-open" data-t="archiveOpen"></button>
+      <input type="file" id="archive-file" accept=".html" hidden>
+      <span class="hint" id="archive-status" role="status"></span>
+    </div>
     <div class="list" id="history-list"></div>
   </section>
   <div class="layout" id="builder">
@@ -192,7 +205,7 @@
             <div><dt data-t="docIssued"></dt><dd id="pdf-issued"></dd></div>
             <div><dt data-t="validity"></dt><dd id="pdf-date"></dd></div>
             <div id="pdf-owner-row" hidden><dt data-t="docOwner"></dt><dd id="pdf-owner"></dd></div>
-          </dl><p data-t="vat">Ceny netto, bez VAT.</p><p class="demo-watermark" data-t="demoPdf">Wersja demonstracyjna. Ceny przykładowe.</p></footer>
+          </dl><p data-t="vat">Ceny netto, bez VAT.</p><p class="demo-watermark" data-t="demoPdf">GX Solutions Polska</p></footer>
       </article><p id="status" class="status" role="status"></p></div>
     </section>
     <aside class="client-dash" id="client-dash" aria-labelledby="dash-heading">
@@ -233,7 +246,7 @@
 'use strict';
 const words = {
   pl: {
-    language:'Język interfejsu',quoteLanguage:'Język oferty',title:'Generator ofert GX',demo:'Demo. Używaj przykładowych danych. Historia jest zapisywana tylko w tej przeglądarce.',
+    safetyPending:'Katalog ActiveSafety jest jeszcze pusty.',archiveOpen:'Wczytaj prywatne archiwum',archiveError:'Nie udało się odczytać archiwum.',language:'Język interfejsu',quoteLanguage:'Język oferty',title:'Generator ofert GX',demo:'Demo. Cennik i archiwum możesz wczytać w zakładce Historia. Historia jest zapisywana tylko w tej przeglądarce.',
     clientSection:'Klient i oferta',client:'Klient',custom:'Dodaj klienta',company:'Nazwa firmy',tax:'NIP / IČO',number:'Numer oferty',validity:'Ważna do',currency:'Waluta',
     findClient:'Szukaj klienta po nazwie, NIP lub miejscowości',noClientMatch:'Nie znaleziono klienta.',
     clientSummary:'Podsumowanie klienta',savedQuotes:'Zapisane oferty',quotedNet:'Łączna wartość ofert netto',quotedMonthly:'Abonamenty w ofertach / mies.',dashScope:'Oferty zapisane w tej przeglądarce.',
@@ -241,7 +254,7 @@ const words = {
     installation:'Konfiguracja pozycji',vehicle:'Nazwa pozycji',qty:'Ilość',components:'Komponenty i ceny za jednostkę',unitTotal:'Cena za jednostkę',description:'Uwagi (opcjonalnie)',
     includeService:'Dodaj miesięczny abonament',servicePerVehicle:'Miesięcznie za jednostkę',preview:'Podgląd oferty',pdf:'Zapisz jako PDF',quote:'Oferta cenowa',
     oneTime:'Przedmiot oferty i specyfikacja cenowa',monthly:'Miesięczny abonament',item:'Pozycja',count:'Ilość',unitPrice:'Cena jedn.',subtotal:'Razem',service:'Abonament',
-    docNotes:'Uwagi',docIssued:'Data',docOwner:'Odpowiedzialny',docAdditional:'Dodatkowe informacje',vat:'Ceny netto, bez VAT.',demoPdf:'Wersja demonstracyjna. Ceny przykładowe.',newQuote:'Nowa oferta',history:'Historia',historyHint:'Historia lokalna. Zatwierdzanie zniżek jest symulacją.',
+    docNotes:'Uwagi',docIssued:'Data',docOwner:'Odpowiedzialny',docAdditional:'Dodatkowe informacje',vat:'Ceny netto, bez VAT.',demoPdf:'Wersja demonstracyjna. Ceny wprowadzane ręcznie.',newQuote:'Nowa oferta',history:'Historia',historyHint:'Historia lokalna. Zatwierdzanie zniżek jest symulacją.',
     salesperson:'Handlowiec',clientHistory:'Poprzednie oferty klienta',quoteItems:'Pozycje oferty',addProduct:'+ Dodaj pozycję',removeProduct:'Usuń',pickProduct:'Wybierz produkt',
     commitItem:'Dodaj do oferty',updateItem:'Zapisz pozycję',cancelItem:'Anuluj',editItem:'Edytuj',nameRequired:'Wpisz nazwę pozycji.',
     minPart:'Minimum',sellPrice:'Cena ofertowa',discount:'Rabat',discountAmount:'Łączny rabat jednorazowy',minimum:'Minimum jednorazowe',netTotal:'Razem jednorazowo netto',
@@ -257,7 +270,7 @@ const words = {
     lookupError:'Wykaz VAT jest chwilowo niedostępny. Spróbuj ponownie lub wpisz dane ręcznie.'
   },
   cs: {
-    language:'Jazyk aplikace',quoteLanguage:'Jazyk nabídky',title:'Generátor nabídek GX',demo:'Demo. Používej ukázková data. Historie se ukládá jen v tomto prohlížeči.',
+    safetyPending:'Ceník ActiveSafety zatím čeká na doplnění.',archiveOpen:'Načíst soukromý archiv',archiveError:'Archiv se nepodařilo načíst.',language:'Jazyk aplikace',quoteLanguage:'Jazyk nabídky',title:'Generátor nabídek GX',demo:'Demo. Interní ceník a archiv můžeš načíst v záložce Historie. Historie se ukládá jen v tomto prohlížeči.',
     clientSection:'Klient a nabídka',client:'Klient',custom:'Přidat klienta',company:'Název firmy',tax:'IČO / NIP',number:'Číslo nabídky',validity:'Platnost do',currency:'Měna',
     findClient:'Hledat klienta podle názvu, NIP nebo města',noClientMatch:'Žádný odpovídající klient.',
     clientSummary:'Přehled klienta',savedQuotes:'Uložené nabídky',quotedNet:'Celková hodnota nabídek bez DPH',quotedMonthly:'Paušály v nabídkách / měs.',dashScope:'Nabídky uložené v tomto prohlížeči.',
@@ -265,7 +278,7 @@ const words = {
     installation:'Konfigurace položky',vehicle:'Název položky',qty:'Počet kusů',components:'Komponenty a ceny za jednotku',unitTotal:'Cena za jednotku',description:'Poznámka (volitelná)',
     includeService:'Přidat měsíční paušál',servicePerVehicle:'Měsíčně za jednotku',preview:'Náhled nabídky',pdf:'Uložit jako PDF',quote:'Cenová nabídka',
     oneTime:'Jednorázové platby',monthly:'Měsíční platby',item:'Položka',count:'Počet',unitPrice:'Cena za kus',subtotal:'Celkem',service:'Měsíční paušál',
-    docNotes:'Poznámky',docIssued:'Datum',docOwner:'Odpovídá',docAdditional:'Doplňující informace',vat:'Ceny jsou uvedeny bez DPH.',demoPdf:'Ukázková nabídka. Testovací ceny.',newQuote:'Nová nabídka',history:'Historie',historyHint:'Historie v tomto prohlížeči. Schválení slevy je simulace.',
+    docNotes:'Poznámky',docIssued:'Datum',docOwner:'Odpovídá',docAdditional:'Doplňující informace',vat:'Ceny jsou uvedeny bez DPH.',demoPdf:'Ukázková nabídka. Ceny zadané ručně.',newQuote:'Nová nabídka',history:'Historie',historyHint:'Historie v tomto prohlížeči. Schválení slevy je simulace.',
     salesperson:'Obchodník',clientHistory:'Předchozí nabídky klienta',quoteItems:'Položky nabídky',addProduct:'+ Přidat položku',removeProduct:'Smazat',pickProduct:'Vyber produkt',
     commitItem:'Přidat do nabídky',updateItem:'Uložit položku',cancelItem:'Zrušit',editItem:'Upravit',nameRequired:'Zadej název položky.',
     minPart:'Minimum',sellPrice:'Prodejní cena',discount:'Sleva',discountAmount:'Celková jednorázová sleva',minimum:'Jednorázová minimální cena',netTotal:'Jednorázově celkem bez DPH',
@@ -299,13 +312,17 @@ const parts = {
   projection:['Projektor ostrzegawczy','Výstražný projektor',105000,630000],
   custom:['Pozycja dodatkowa','Ostatní položka',10000,60000]
 };
+Object.assign(parts,{"GX Truck, Build, Fleet, Bus-3":["GX GO Tracker (jednostka przenośna)","GX GO Tracker (jednostka przenośna)",null,null],"GX Truck, Build, Fleet, Bus-4":["GX Portable (jednostka przenośna)","GX Portable (jednostka przenośna)",null,null],"GX Truck, Build, Fleet, Bus-5":["Jednostka główna EXT1","Jednostka główna EXT1",null,null],"GX Truck, Build, Fleet, Bus-6":["Jednostka główna \"L\" MAX","Jednostka główna \"L\" MAX",null,null],"GX Truck, Build, Fleet, Bus-7":["Jednostka główna \"L\" FLEET (max.napięcie. do 12V)","Jednostka główna \"L\" FLEET (max.napięcie. do 12V)",null,null],"GX Truck, Build, Fleet, Bus-8":["Aktywacja modułu FMS/CAN (tylko MAX, FULL)","Aktywacja modułu FMS/CAN (tylko MAX, FULL)",null,null],"GX Truck, Build, Fleet, Bus-9":["Extender \"Tachoreader\"","Extender \"Tachoreader\"",null,null],"GX Truck, Build, Fleet, Bus-10":["RFID czytnik (węcej typów)","RFID czytnik (węcej typów)",null,null],"GX Truck, Build, Fleet, Bus-11":["Dallas czytnik","Dallas czytnik",null,null],"GX Truck, Build, Fleet, Bus-12":["Sonda paliwa","Sonda paliwa",null,null],"GX Truck, Build, Fleet, Bus-13":["GSM antena","GSM antena",null,null],"GX Truck, Build, Fleet, Bus-14":["GPS antena","GPS antena",null,null],"GX Truck, Build, Fleet, Bus-15":["Blue Tooth modul","Blue Tooth modul",null,null],"GX Truck, Build, Fleet, Bus-16":["Okablowanie bez pomiaru paliwa","Okablowanie bez pomiaru paliwa",null,null],"GX Truck, Build, Fleet, Bus-17":["Okablowanie z pomiarem paliwa","Okablowanie z pomiarem paliwa",null,null],"GX Truck, Build, Fleet, Bus-18":["Przełącznik F/S","Przełącznik F/S",null,null],"GX Truck, Build, Fleet, Bus-19":["Montaż GX TRUCK / BUS bez pomiaru paliwa ( 4 h.)","Montaż GX TRUCK / BUS bez pomiaru paliwa ( 4 h.)",null,null],"GX Truck, Build, Fleet, Bus-20":["Montaż GX Truck / BUS z pomiarem paliwa ( 6 h.)","Montaż GX Truck / BUS z pomiarem paliwa ( 6 h.)",null,null],"GX Truck, Build, Fleet, Bus-21":["Montaż GX BUILD / AGRO bez pomiaru paliwa ( 4 h.)","Montaż GX BUILD / AGRO bez pomiaru paliwa ( 4 h.)",null,null],"GX Truck, Build, Fleet, Bus-22":["Montaż GX BUILD / AGRO z pomiarem paliwa ( 6 h.)","Montaż GX BUILD / AGRO z pomiarem paliwa ( 6 h.)",null,null],"GX Truck, Build, Fleet, Bus-23":["Montaż GX FLEET ( 2,5 h.)","Montaż GX FLEET ( 2,5 h.)",null,null],"GX Truck, Build, Fleet, Bus-24":["Dojezd 1 Km / technik, specialista","Dojezd 1 Km / technik, specialista",null,null],"GX Truck, Build, Fleet, Bus-30":["Torola Terminal GT 2.5","Torola Terminal GT 2.5",null,null],"GX Truck, Build, Fleet, Bus-31":["Torola TerminalGT 2.5 + czytnik RFID 125 KHz","Torola TerminalGT 2.5 + czytnik RFID 125 KHz",null,null],"GX Store-3":["Jednostka główna \"EXT1\" + uchwyt, okablowanie, akumulator","Jednostka główna \"EXT1\" + uchwyt, okablowanie, akumulator",null,null],"GX Store-4":["Aktywacja modułu FMS/CAN","Aktywacja modułu FMS/CAN",null,null],"GX Store-5":["RFID czytnik Torola 125KhZ","RFID czytnik Torola 125KhZ",null,null],"GX Store-6":["RFID czytnik Torola 1Mifare","RFID czytnik Torola 1Mifare",null,null],"GX Store-7":["RFID Czytnik Elatec TWN4 Legic, etc..","RFID Czytnik Elatec TWN4 Legic, etc..",null,null],"GX Store-8":["Dallas czytnik","Dallas czytnik",null,null],"GX Store-9":["GSM antena","GSM antena",null,null],"GX Store-10":["GPS antena","GPS antena",null,null],"GX Store-11":["Blue Tooth moduł","Blue Tooth moduł",null,null],"GX Store-12":["WiFi moduł","WiFi moduł",null,null],"GX Store-13":["Czujnik ciśnienia","Czujnik ciśnienia",null,null],"GX Store-14":["Przetwornica napięcia","Przetwornica napięcia",null,null],"GX Store-15":["Extender","Extender",null,null],"GX Store-16":["UWB reader (odbiornik)","UWB reader (odbiornik)",null,null],"GX Store-17":["1x UWB Point wraz z montażem","1x UWB Point wraz z montażem",null,null],"GX Store-18":["ActiveSafety Personal (Full)","ActiveSafety Personal (Full)",null,null],"GX Store-19":["Dallas klucz","Dallas klucz",null,null],"GX Store-20":["Montaż GX STORE (bez pomiary obciążenia wideł.)","Montaż GX STORE (bez pomiary obciążenia wideł.)",null,null],"GX Store-21":["Montaż GX STORE (z pomiarem wagi)","Montaż GX STORE (z pomiarem wagi)",null,null],"GX Store-22":["Dojazd 1 Km / technik, specialista","Dojazd 1 Km / technik, specialista",null,null],"GX Store-24":["Implementace własnej mapy (praca IT, TO)","Implementace własnej mapy (praca IT, TO)",null,null],"GX Store-25":["Implementacja systemu (praca  IT, TO)","Implementacja systemu (praca  IT, TO)",null,null],"GX Store-31":["Torola Terminal GT 2.5","Torola Terminal GT 2.5",null,null],"GX Store-32":["Torola Terminal GT 2.5 + czytnik RFID 125 KHz","Torola Terminal GT 2.5 + czytnik RFID 125 KHz",null,null]});
+const sharedParts = ["GX Truck, Build, Fleet, Bus-3","GX Truck, Build, Fleet, Bus-4","GX Truck, Build, Fleet, Bus-5","GX Truck, Build, Fleet, Bus-6","GX Truck, Build, Fleet, Bus-7","GX Truck, Build, Fleet, Bus-8","GX Truck, Build, Fleet, Bus-9","GX Truck, Build, Fleet, Bus-10","GX Truck, Build, Fleet, Bus-11","GX Truck, Build, Fleet, Bus-12","GX Truck, Build, Fleet, Bus-13","GX Truck, Build, Fleet, Bus-14","GX Truck, Build, Fleet, Bus-15","GX Truck, Build, Fleet, Bus-16","GX Truck, Build, Fleet, Bus-17","GX Truck, Build, Fleet, Bus-18","GX Truck, Build, Fleet, Bus-19","GX Truck, Build, Fleet, Bus-20","GX Truck, Build, Fleet, Bus-21","GX Truck, Build, Fleet, Bus-22","GX Truck, Build, Fleet, Bus-23","GX Truck, Build, Fleet, Bus-24","GX Truck, Build, Fleet, Bus-30","GX Truck, Build, Fleet, Bus-31"];
+const storeParts = ["GX Store-3","GX Store-4","GX Store-5","GX Store-6","GX Store-7","GX Store-8","GX Store-9","GX Store-10","GX Store-11","GX Store-12","GX Store-13","GX Store-14","GX Store-15","GX Store-16","GX Store-17","GX Store-18","GX Store-19","GX Store-20","GX Store-21","GX Store-22","GX Store-24","GX Store-25","GX Store-31","GX Store-32"];
+const monthlyMinimums = {};
 const products = {
-  fleet:{name:'GX Fleet',scope:['Montaż systemu GX Fleet w pojeździe','Osazení vozidla systémem GX Fleet'],parts:['gps','antenna','gsm','wiring','install','can']},
-  truck:{name:'GX Truck',scope:['Montaż systemu GX Truck w ciężarówce','Osazení nákladního vozidla systémem GX Truck'],parts:['gps','antenna','gsm','can','fuel','wiring','install']},
-  build:{name:'GX Build',scope:['Montaż systemu GX Build na maszynie','Osazení stroje systémem GX Build'],parts:['rugged','antenna','gsm','hours','fuel','wiring','install']},
-  store:{name:'GX Store',scope:['Montaż systemu GX Store na wózku','Osazení vozíku systémem GX Store'],parts:['gps','antenna','reader','impact','can','wiring','install']},
-  safety:{name:'GX ActiveSafety',scope:['Wdrożenie GX ActiveSafety','Realizace GX ActiveSafety'],parts:['uwb','projection','reader','wiring','install']},
-  other:{name:['Pozostałe','Ostatní'],scope:['Zakres dodatkowy','Ostatní dodávka'],parts:['custom','wiring','install']}
+  fleet:{name:'GX Fleet',scope:['Montaż systemu GX Fleet w pojeździe','Osazení vozidla systémem GX Fleet'],parts:sharedParts},
+  truck:{name:'GX Truck',scope:['Montaż systemu GX Truck w ciężarówce','Osazení nákladního vozidla systémem GX Truck'],parts:sharedParts},
+  build:{name:'GX Build',scope:['Montaż systemu GX Build na maszynie','Osazení stroje systémem GX Build'],parts:sharedParts},
+  store:{name:'GX Store',scope:['Montaż systemu GX Store na wózku','Osazení vozíku systémem GX Store'],parts:storeParts},
+  safety:{name:'GX ActiveSafety',scope:['Wdrożenie GX ActiveSafety','Realizace GX ActiveSafety'],parts:[]},
+  other:{name:['Pozostałe','Ostatní'],scope:['Zakres dodatkowy','Ostatní dodávka'],parts:sharedParts}
 };
 const initialClients = [
   {"name":"AGRO TRANSHANDEL Sp. z o.o.","tax":"7773079562","address":"Szewce-Mylna 12, BUK, 64-320"},
@@ -432,8 +449,8 @@ const loc = (value,lang) => Array.isArray(value) ? value[lang==='pl' ? 0 : 1] : 
 const t = key => words[uiLang()][key];
 const money = (amount,lang=uiLang(),code=currency()) => new Intl.NumberFormat(lang,{style:'currency',currency:code}).format(amount/100);
 const dateText = (value,lang=uiLang()) => value ? new Intl.DateTimeFormat(lang,{dateStyle:'medium',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z')) : '—';
-const minimum = (id,code=currency()) => parts[id][code==='PLN' ? 2 : 3];
-const monthDefault = () => currency()==='PLN' ? 3500 : 22000;
+const minimum = (id,code=currency()) => parts[id]?.[code==='PLN' ? 2 : 3]??null;
+const monthDefault = product => currency()==='PLN' && product && product!=='safety' ? monthlyMinimums[product==='store'?'store':'common']??null : null;
 const storageKey = 'gx-quotes-demo-v2';
 const clientsKey = 'gx-clients-demo-v1';
 const today = (offset=0) => {
@@ -441,6 +458,7 @@ const today = (offset=0) => {
   value.setDate(value.getDate()+offset);
   return [value.getFullYear(),String(value.getMonth()+1).padStart(2,'0'),String(value.getDate()).padStart(2,'0')].join('-');
 };
+let importedHistory = [];
 let records;
 try { records=JSON.parse(localStorage.getItem(storageKey)) ?? []; } catch { records=[]; }
 if (!Array.isArray(records)) records=[];
@@ -478,7 +496,10 @@ function sameClient(a,b) {
   return a.tax && b.tax ? norm(a.tax)===norm(b.tax) : norm(a.name)!=='' && norm(a.name)===norm(b.name);
 }
 function clients() {
-  const entries=[...initialClients,...records.slice().reverse().map(record=>record.client),...savedClients];
+  const known = [...initialClients,...records.slice().reverse().map(record=>record.client),...savedClients];
+  const names = new Set(known.map(client=>norm(client.name)));
+  const fromArchive = importedHistory.filter(row=>!names.has(norm(row.client))).map(row=>({name:row.client,tax:'',address:''}));
+  const entries=[...known,...fromArchive];
   const knownNames=new Set([...initialClients,...savedClients].filter(client=>client.tax).map(client=>norm(client.name)));
   return [...new Map(entries.filter(client=>client.tax||!knownNames.has(norm(client.name)))
     .map(client=>[clientKey(client),client])).values()]
@@ -671,7 +692,7 @@ function groupNote(group,lang) {
 function draft() {
   const snapshots=groups.map(group=>({
     product:group.product,label:group.label,qty:group.qty,descriptions:{pl:groupNote(group,'pl'),cs:groupNote(group,'cs')},service:group.serviceEnabled?group.service:null,
-    items:Object.entries(group.prices).map(([id,price])=>({id,price,floor:minimum(id)}))
+    items:Object.entries(group.prices).map(([id,price])=>({id,price,floor:minimum(id)??0}))
   }));
   return {number:el('number').value,date:today(),validity:el('date').value,client:currentClient(),salesperson:el('salesperson').value,
     currency:currency(),language:quoteLang(),groups:snapshots,discount:amount(el('discount'))};
@@ -687,9 +708,10 @@ function draftError(record) {
 }
 function groupError(group) {
   const prices=Object.entries(group.prices);
+  if (group.product==='safety'&&!prices.length) return 'safetyPending';
   if (!group.product||!prices.length) return 'noProducts';
   if (!Number.isInteger(group.qty)||group.qty<1||group.qty>999||
-      group.serviceEnabled&&group.service===null||
+      group.serviceEnabled&&(group.service===null||group.service<(monthDefault(group.product)??0))||
       prices.some(([id,price])=>price===null||price<minimum(id))) return 'pricingError';
   return '';
 }
@@ -699,6 +721,7 @@ function renderPaper(record) {
   const format=value=>money(value,lang,record.currency);
   const paper=el('paper');
   paper.lang=lang;
+  paper.querySelector('.demo-watermark').hidden=Boolean(monthlyMinimums.common)&&record.currency==='PLN';
   paper.querySelectorAll('[data-t]').forEach(node=>{node.textContent=text[node.dataset.t];});
   put('pdf-client',record.client.name||'—');
   put('pdf-tax',record.client.tax||'—');
@@ -865,6 +888,117 @@ function renderClientDashboard(client,history) {
   if (el('client').value === 'custom') mapTimer = setTimeout(show, 450);
   else show();
 }
+const archiveLabels = {
+  cs:{title:'Historické nabídky',count:'Dokumenty v archivu',net:'Suma doložených nabídek bez DPH',gross:'Suma doložených nabídek s DPH',units:'Doložené stroje a vozíky',monthly:'Doložené měsíční paušály',
+    basis:{net:'bez DPH',gross:'s DPH',options:'Cenové alternativy',estimate:'Orientační ceny'},
+    state:{archive:'Archiv',alternative:'Alternativa',superseded:'Starší verze'},
+    note:'Alternativy, orientační ceny a nahrazené verze se nezapočítávají. Hodnoty nabídek nepředstavují tržby.',
+    authored:'Autor v dokumentu neuveden',folder:'datum složky',file:'datum vytvoření PDF',items:'Cenové položky',valid:'Platnost do'},
+  pl:{title:'Oferty archiwalne',count:'Dokumenty w archiwum',net:'Łączna wartość ofert netto',gross:'Łączna wartość ofert brutto',units:'Maszyny i wózki z dokumentów',monthly:'Udokumentowane abonamenty miesięczne',
+    basis:{net:'netto',gross:'brutto',options:'Warianty cenowe',estimate:'Ceny orientacyjne'},
+    state:{archive:'Archiwum',alternative:'Wariant',superseded:'Starsza wersja'},
+    note:'Warianty, ceny orientacyjne i zastąpione wersje nie są sumowane. Wartość ofert nie oznacza przychodu.',
+    authored:'Autor niepodany w dokumencie',folder:'data folderu',file:'data utworzenia PDF',items:'Pozycje cenowe',valid:'Ważna do'}
+};
+function renderArchiveSummary(rows, target, includeList) {
+  const labels=archiveLabels[uiLang()];
+  target.hidden=!rows.length;
+  target.replaceChildren();
+  if(!rows.length) return;
+  const clean=rows.filter(q=>q.status==='archive' && q.amount!==null);
+  const values=[
+    [labels.count,rows.length],
+    ...['net','gross'].map(basis=>{
+      const entries=clean.filter(row=>row.basis===basis);
+      return [labels[basis],entries.length?money(entries.reduce((sum,row)=>sum+row.amount,0),uiLang(),'PLN'):null];
+    }),
+    [labels.units,clean.some(row=>row.units!==null)?clean.reduce((sum,row)=>sum+(row.units??0),0):null],
+    [labels.monthly,clean.some(row=>row.monthly!==null)?money(clean.reduce((sum,row)=>sum+(row.monthly??0),0),uiLang(),'PLN'):null]
+  ];
+  const stats=element('dl',undefined,'dash-money');
+  for(const [label,value] of values){
+    if(value===null) continue;
+    const line=element('div');
+    line.append(element('dt',label),element('dd',value));
+    stats.append(line);
+  }
+  target.append(element('h2',labels.title),stats,element('p',labels.note,'hint'));
+  if(!includeList) return;
+  const list=element('div',undefined,'list');
+  for(const row of [...rows].sort((a,b)=>b.date.localeCompare(a.date))){
+    const card=element('article',undefined,'record');
+    const details=element('div');
+    const when=row.date ? dateText(row.date)+(row.dateSource==='document'?'':' ('+labels[row.dateSource]+')') : '';
+    const cost=row.amount===null ? labels.basis[row.basis] : money(row.amount,uiLang(),row.currency)+' '+labels.basis[row.basis];
+    details.append(element('strong',row.client+' · '+(row.number||row.title)),
+      element('small',[when,row.product,cost,labels.state[row.status]].filter(Boolean).join(' · ')),
+      element('small',[row.salesperson||labels.authored,row.units===null?'':labels.units+' '+row.units,
+        row.monthly===null?'':labels.monthly+' '+money(row.monthly,uiLang(),row.currency),
+        row.validity?labels.valid+' '+dateText(row.validity):''].filter(Boolean).join(' · ')));
+    if(row.items.length){
+      const expandable=element('details');
+      expandable.append(element('summary',labels.items));
+      for(const item of row.items){
+        expandable.append(element('small',[item.label,item.qty===null?'':String(item.qty),money(item.value,uiLang(),row.currency)].filter(Boolean).join(' · ')));
+      }
+      details.append(expandable);
+    }
+    card.append(details);
+    list.append(card);
+  }
+  target.append(list);
+}
+function showImportedHistory(current,filter) {
+  const matches=(row,client)=>norm(row.client)===norm(client.name);
+  for(const [id,anchor] of [['archive-dash','client-dash'],['archive-list','history-view']]){
+    if(el(id)) continue;
+    const panel=element('section',undefined,'panel archive-panel');
+    panel.id=id;
+    el(anchor).append(panel);
+  }
+  renderArchiveSummary(importedHistory.filter(row=>matches(row,current)),el('archive-dash'),false);
+  renderArchiveSummary(importedHistory.filter(row=>!filter||matches(row,filter)),el('archive-list'),true);
+}
+
+el('archive-open').addEventListener('click',()=>el('archive-file').click());
+el('archive-file').addEventListener('change',async event=>{
+  const file=event.target.files[0];
+  if (!file) return;
+  event.target.value='';
+  try {
+    if (file.size>5_000_000) throw Error();
+    const source=await file.text();
+    const json=source.match(/^const importedHistory = (\[.*\]);$/m)?.[1];
+    const rows=JSON.parse(json);
+    const text=value=>typeof value==='string'&&value.length<=500;
+    const amount=value=>value===null||Number.isSafeInteger(value)&&value>=0;
+    const date=value=>value===''||typeof value==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(value)&&Number.isFinite(Date.parse(value));
+    if (!Array.isArray(rows)||!rows.length||!rows.every(row=>
+      row && row.client && [row.client,row.number,row.title,row.product,row.salesperson].every(text)
+      && ['archive','alternative','superseded'].includes(row.status)
+      && ['net','gross','options','estimate'].includes(row.basis)
+      && row.currency==='PLN' && date(row.date) && date(row.validity)
+      && [row.amount,row.monthly,row.units].every(amount)
+      && Array.isArray(row.items) && row.items.every(item=>item&&text(item.label)&&amount(item.value)&&amount(item.qty)))) throw Error();
+    const catalog=source.match(/^Object\.assign\(parts,(\{.*\})\);$/m)?.[1];
+    const fees=source.match(/^const monthlyMinimums = (\{.*\});$/m)?.[1];
+    if (catalog || fees) {
+      const rates=JSON.parse(catalog), monthly=JSON.parse(fees);
+      const ids=[...sharedParts,...storeParts];
+      const isPrice=value=>Number.isSafeInteger(value)&&value>0;
+      if (!ids.every(id=>rates[id]?.[0]===parts[id][0]&&isPrice(rates[id]?.[2]))
+        || !['store','common'].every(kind=>isPrice(monthly[kind]))) throw Error();
+      for (const id of ids) parts[id][2]=rates[id][2];
+      monthlyMinimums.store=monthly.store;
+      monthlyMinimums.common=monthly.common;
+    }
+    importedHistory=rows;
+    refresh();
+    put('archive-status',archiveLabels[uiLang()].count+' · '+rows.length);
+  } catch {
+    put('archive-status',t('archiveError'));
+  }
+});
 function renderHistory() {
   const filters=clients().map(client=>[clientKey(client),client.name]);
   replaceOptions(el('history-client'),[['',t('all')],...filters]);
@@ -877,6 +1011,7 @@ function renderHistory() {
   el('customer-records').replaceChildren(...(old.length?old:[element('p',t('none'),'empty')]));
   el('client-history').hidden=!current.name&&!current.tax;
   renderClientDashboard(current,clientHistory);
+  showImportedHistory(current,filter);
 }
 function renderGroup() {
   const group=editingItem;
@@ -915,10 +1050,16 @@ function renderGroup() {
   el('description').value=groupNote(group,quoteLang());
   el('description').lang=quoteLang();
   el('service-enabled').checked=group.serviceEnabled;
+  el('service-price').min=String((monthDefault(group.product)??0)/100);
   el('service-price').value=group.service===null?'':group.service/100;
   el('service-price').disabled=!group.product||!group.serviceEnabled;
   el('service-field').hidden=!group.serviceEnabled;
-  el('components').replaceChildren(...(products[group.product]?.parts??[]).map(id=>{
+  const choices = new Set([...(products[group.product]?.parts??[]),...Object.keys(group.prices)]);
+  if (group.product==='safety'&&!choices.size) {
+    el('components').replaceChildren(element('p',t('safetyPending'),'hint'));
+    return;
+  }
+  el('components').replaceChildren(...[...choices].map(id=>{
     const row=element('div',undefined,'component');
     const label=element('label');
     const checkbox=element('input');
@@ -928,19 +1069,19 @@ function renderGroup() {
     const floor=minimum(id);
     const price=element('input',undefined,'part-price');
     price.type='number';
-    price.min=String(floor/100);
+    price.min=String((floor??0)/100);
     price.step='0.01';
     price.required=true;
     price.disabled=!checkbox.checked;
-    price.value=checkbox.checked ? (group.prices[id]===null?'':group.prices[id]/100) : floor/100;
+    price.value=checkbox.checked ? (group.prices[id]===null?'':group.prices[id]/100) : (floor===null?'':floor/100);
     price.setAttribute('aria-label',t('sellPrice')+' · '+name);
     const caption=element('span',name);
-    caption.append(element('small',t('minPart')+' '+money(floor)));
+    if(floor!==null) caption.append(element('small',t('minPart')+' '+money(floor)));
     label.append(checkbox,caption);
     checkbox.addEventListener('change',()=>{
       if(checkbox.checked) group.prices[id]=floor;
       else delete group.prices[id];
-      price.value=floor/100;
+      price.value=floor===null?'':floor/100;
       price.disabled=!checkbox.checked;
       put('item-status','');refreshQuote();
     });
@@ -1076,6 +1217,7 @@ el('quote-language').addEventListener('change',()=>{touch();renderGroup();refres
 el('product').addEventListener('change',()=>{
   editingItem.product=el('product').value;
   editingItem.prices={};
+  editingItem.service=monthDefault(editingItem.product);
   put('item-status','');
   renderGroup();
   refreshQuote();
@@ -1097,7 +1239,7 @@ el('currency').addEventListener('change',()=>{
   touch();
   for(const group of editingItem?[...groups,editingItem]:groups) {
     for(const id of Object.keys(group.prices)) group.prices[id]=minimum(id);
-    group.service=monthDefault();
+    group.service=monthDefault(group.product);
   }
   el('discount').value=0;
   renderGroup();refreshQuote();
