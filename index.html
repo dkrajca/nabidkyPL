@@ -71,6 +71,11 @@
           <div class="wide">
             <button id="import-clients" class="secondary" type="button" data-t="importClients"></button>
             <input id="client-workbook" type="file" accept=".xlsx" hidden>
+            <details>
+              <summary data-t="pasteClients"></summary>
+              <label><span data-t="clientTable"></span><textarea id="client-table"></textarea></label>
+              <button class="secondary" type="button" id="import-client-table" data-t="importTable"></button>
+            </details>
             <p id="import-status" class="hint" role="status"></p>
           </div>
           <label class="wide" id="custom-client" hidden><span data-t="company">Nazwa firmy</span><input id="company" maxlength="120" autocomplete="organization"></label>
@@ -142,6 +147,7 @@ const words = {
     found:'Dane z oficjalnego wykazu VAT. Sprawdź adres przed zapisaniem.',notFound:'Brak firmy w wykazie VAT dla tego NIP. Możesz wpisać dane ręcznie.',
     lookupError:'Wykaz VAT jest chwilowo niedostępny. Spróbuj ponownie lub wpisz dane ręcznie.',
     importClients:'Importuj klientów GX Polska z Excela',importing:'Wczytuję plik w tej przeglądarce…',importInvalid:'Nie udało się odczytać pliku .xlsx.',
+    pasteClients:'Wklej tabelę klientów',clientTable:'Tabela z nagłówkami z Excela',importTable:'Importuj wklejoną tabelę',
     importHeaders:'Nie znaleziono wiersza z kolumnami „Přívlastek” i nazwą firmy.',importEmpty:'Brak klientów z oznaczeniem GX Polska.',
     importSaved:'Dodano: {count}. Już zapisani: {existing}. Brakujący lub błędny NIP do sprawdzenia: {missing}. Dane zapisano tylko w tej przeglądarce.'
   },
@@ -166,6 +172,7 @@ const words = {
     found:'Údaje z oficiálního registru DPH. Před uložením zkontroluj adresu.',notFound:'Pro toto NIP se v registru DPH firma nenašla. Údaje můžeš doplnit ručně.',
     lookupError:'Registr DPH je momentálně nedostupný. Zkus to znovu nebo údaje doplň ručně.',
     importClients:'Importovat klienty GX Polska z Excelu',importing:'Načítám soubor v tomto prohlížeči…',importInvalid:'Soubor .xlsx se nepodařilo přečíst.',
+    pasteClients:'Vložit tabulku klientů',clientTable:'Tabulka se záhlavím z Excelu',importTable:'Importovat vloženou tabulku',
     importHeaders:'Chybí řádek se sloupcem „Přívlastek“ a názvem firmy.',importEmpty:'V souboru nejsou žádní klienti s příznakem GX Polska.',
     importSaved:'Přidáno: {count}. Už uložených: {existing}. Chybějící nebo chybné NIP k ověření: {missing}. Data jsou uložená jen v tomto prohlížeči.'
   }
@@ -250,9 +257,9 @@ function amount(input) {
   return input.validity.valid && Number.isSafeInteger(n) ? n : null;
 }
 function norm(value) { return value.trim().normalize('NFKC').toLowerCase().replace(/[\s-]+/g,''); }
-function clientKey(client) { return client.tax ? 'tax:'+norm(client.tax) : 'name:'+norm(client.name); }
+function clientKey(client) { return JSON.stringify([norm(client.tax),norm(client.name)]); }
 function sameClient(a,b) {
-  return a.tax && b.tax ? clientKey(a)===clientKey(b) : norm(a.name)!=='' && norm(a.name)===norm(b.name);
+  return a.tax && b.tax ? norm(a.tax)===norm(b.tax) : norm(a.name)!=='' && norm(a.name)===norm(b.name);
 }
 function clients() {
   return [...new Map([...initialClients,...records.slice().reverse().map(record=>record.client),...savedClients].map(client=>[clientKey(client),client])).values()];
@@ -384,30 +391,50 @@ async function workbookClients(file) {
   }
   return {matches,headerFound};
 }
+function storeImportedClients({matches,headerFound}) {
+  if(!headerFound){put('import-status',t('importHeaders'));return;}
+  if(!matches.length){put('import-status',t('importEmpty'));return;}
+  const known=clients();
+  const added=[];
+  for(const client of matches){
+    if(known.some(item=>norm(item.name)===norm(client.name)&&sameClient(client,item))) continue;
+    known.push(client);
+    added.push(client);
+  }
+  if(added.length){
+    const updated=[...savedClients,...added];
+    try {localStorage.setItem(clientsKey,JSON.stringify(updated));}
+    catch {put('import-status',t('storageError'));return;}
+    savedClients=updated;
+    refresh();
+  }
+  put('import-status',t('importSaved').replace('{count}',added.length)
+    .replace('{existing}',matches.length-added.length).replace('{missing}',added.filter(client=>!client.tax).length));
+  return true;
+}
+function importClientTable() {
+  const field=el('client-table');
+  const [header,...lines]=field.value.trimEnd().split(/\r?\n/);
+  const columns=workbookColumns(header.split('\t'));
+  const matches=[];
+  if(columns){
+    for(const line of lines){
+      const row=line.split('\t').map(value=>value.trim());
+      if(!row[columns.name]||!row[columns.tag]?.split(/[,;|]/).some(tag=>tag.trim().toLowerCase()==='gx polska')) continue;
+      const nip=normalizeNip(row[columns.tax]??'');
+      const street=[row[columns.street],row[columns.number]].filter(Boolean).join(' ');
+      const city=[row[columns.postal],row[columns.city]].filter(Boolean).join(' ');
+      matches.push({name:row[columns.name],tax:validNip(nip)?nip:'',address:row[columns.address]||[street,city].filter(Boolean).join(', ')});
+    }
+  }
+  if(storeImportedClients({matches,headerFound:Boolean(columns)})) field.value='';
+}
 async function importClients(file) {
   if(!file) return;
   el('import-clients').disabled=true;
   put('import-status',t('importing'));
   try {
-    const {matches,headerFound}=await workbookClients(file);
-    if(!headerFound){put('import-status',t('importHeaders'));return;}
-    if(!matches.length){put('import-status',t('importEmpty'));return;}
-    const known=clients();
-    const added=[];
-    for(const client of matches){
-      if(known.some(item=>sameClient(client,item))) continue;
-      known.push(client);
-      added.push(client);
-    }
-    if(added.length){
-      const updated=[...savedClients,...added];
-      try {localStorage.setItem(clientsKey,JSON.stringify(updated));}
-      catch {put('import-status',t('storageError'));return;}
-      savedClients=updated;
-      refresh();
-    }
-    put('import-status',t('importSaved').replace('{count}',added.length)
-      .replace('{existing}',matches.length-added.length).replace('{missing}',added.filter(client=>!client.tax).length));
+    storeImportedClients(await workbookClients(file));
   } catch {
     put('import-status',t('importInvalid'));
   } finally {
@@ -777,6 +804,7 @@ el('tax').addEventListener('input',()=>{
 el('nip-lookup').addEventListener('click',lookupNip);
 el('save-client').addEventListener('click',saveClient);
 el('import-clients').addEventListener('click',()=>el('client-workbook').click());
+el('import-client-table').addEventListener('click',importClientTable);
 el('client-workbook').addEventListener('change',event=>{
   const file=event.target.files[0];
   event.target.value='';
