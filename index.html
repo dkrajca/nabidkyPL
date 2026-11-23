@@ -183,6 +183,11 @@
     .archive-bars{gap:4px}
     .archive-bars li{flex-basis:30px;font-size:.65rem}
   }
+  .history-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+  .history-heading h2{margin:0}
+  #history-sidebar-toggle{display:inline-flex;align-items:center;gap:6px;min-height:32px}
+  #history-sidebar-arrow{font-size:1.35em;line-height:1}
+  .history-workspace.sidebar-collapsed{grid-template-columns:minmax(0,1fr)}
 </style>
 </head>
 <body>
@@ -199,8 +204,11 @@
     <span class="hint" id="archive-status" role="status"></span>
   </form>
   <section class="panel history" id="history-view" hidden>
-    <h2 data-t="history"></h2>
-    <div class="history-workspace">
+    <div class="history-heading">
+      <h2 data-t="history"></h2>
+      <button type="button" class="secondary" id="history-sidebar-toggle" aria-controls="history-sidebar" aria-expanded="true"><span id="history-sidebar-arrow" aria-hidden="true">›</span><span id="history-sidebar-label"></span></button>
+    </div>
+    <div class="history-workspace" id="history-workspace">
       <div class="history-column">
         <div class="history-filters">
           <label><span data-t="client"></span><select id="history-client"></select></label>
@@ -209,7 +217,7 @@
         <p class="hint" data-t="historyHint"></p>
         <div id="history-list"></div>
       </div>
-      <aside class="history-sidebar">
+      <aside class="history-sidebar" id="history-sidebar">
         <div id="history-selection" class="history-selection" hidden></div>
         <div id="history-stage-stats"></div>
         <section class="panel archive-panel" id="archive-list" hidden></section>
@@ -1209,11 +1217,30 @@ function savedHistoryRow(record) {
 const dealStages=['inProgress','won','lost','deferred','unknown'];
 const historyStageKey='gx-quote-stages-v1';
 const historyUi={
-  cs:{stage:'Obchodní stav',allStages:'Všechny stavy',inProgress:'V řešení',lost:'Ztraceno',won:'Realizováno',deferred:'Přesunuto na později',unknown:'Neurčeno',summary:'Nabídky podle stavu',back:'Zpět k nabídkám',lookup:'Vyhledat firmu na mapě',archive:'Archivní nabídka',saved:'Uložená nabídka',addressMissing:'U této firmy nemáme uloženou adresu.'},
-  pl:{stage:'Status handlowy',allStages:'Wszystkie statusy',inProgress:'W toku',lost:'Przegrana',won:'Zrealizowana',deferred:'Przełożona na później',unknown:'Nieustalony',summary:'Oferty według statusu',back:'Wróć do ofert',lookup:'Wyszukaj firmę na mapie',archive:'Oferta archiwalna',saved:'Zapisana oferta',addressMissing:'Nie zapisano adresu tej firmy.'}
+  cs:{hideSidebar:'Skrýt panel',showSidebar:'Otevřít panel',stage:'Obchodní stav',allStages:'Všechny stavy',inProgress:'V řešení',lost:'Ztraceno',won:'Realizováno',deferred:'Přesunuto na později',unknown:'Neurčeno',summary:'Nabídky podle stavu',back:'Zpět k nabídkám',lookup:'Vyhledat firmu na mapě',archive:'Archivní nabídka',saved:'Uložená nabídka',addressMissing:'U této firmy nemáme uloženou adresu.'},
+  pl:{hideSidebar:'Ukryj panel',showSidebar:'Pokaż panel',stage:'Status handlowy',allStages:'Wszystkie statusy',inProgress:'W toku',lost:'Przegrana',won:'Zrealizowana',deferred:'Przełożona na później',unknown:'Nieustalony',summary:'Oferty według statusu',back:'Wróć do ofert',lookup:'Wyszukaj firmę na mapie',archive:'Oferta archiwalna',saved:'Zapisana oferta',addressMissing:'Nie zapisano adresu tej firmy.'}
 };
 let dealStates=new Map();
 try { dealStates=new Map(JSON.parse(localStorage.getItem(historyStageKey))??[]); } catch {}
+const historySidebarKey='gx-history-sidebar-collapsed';
+let historySidebarCollapsed=false;
+try { historySidebarCollapsed=localStorage.getItem(historySidebarKey)==='true'; } catch {}
+function renderHistorySidebarToggle() {
+  const sidebar=el('history-sidebar');
+  const workspace=el('history-workspace');
+  const button=el('history-sidebar-toggle');
+  sidebar.hidden=historySidebarCollapsed;
+  workspace.classList.toggle('sidebar-collapsed',historySidebarCollapsed);
+  button.setAttribute('aria-expanded',String(!historySidebarCollapsed));
+  const ui=historyUi[uiLang()];
+  put('history-sidebar-label',historySidebarCollapsed?ui.showSidebar:ui.hideSidebar);
+  put('history-sidebar-arrow',historySidebarCollapsed?'‹':'›');
+}
+el('history-sidebar-toggle').addEventListener('click',()=>{
+  historySidebarCollapsed=!historySidebarCollapsed;
+  try { localStorage.setItem(historySidebarKey,String(historySidebarCollapsed)); } catch {}
+  renderHistorySidebarToggle();
+});
 let selectedHistoryKey='';
 let historySelection=[];
 const stageOf=(key,fallback)=>dealStages.includes(dealStates.get(key))?dealStates.get(key):fallback;
@@ -1317,7 +1344,7 @@ function selectHistoryRow(row) {
   selectedHistoryKey=row.key;
   renderSelectedHistory();
   const heading=el('history-detail-heading');
-  if (matchMedia('(max-width:980px)').matches) {
+  if (!historySidebarCollapsed && matchMedia('(max-width:980px)').matches) {
     heading.focus({preventScroll:true});
     heading.scrollIntoView({block:'start'});
   }
@@ -1535,6 +1562,7 @@ function commitItem() {
   closeItem();
 }
 function refresh() {
+  renderHistorySidebarToggle();
   document.documentElement.lang=uiLang();
   document.title=t('title')+' | GX Solutions Polska';
   el('language').setAttribute('aria-label',t('language'));
