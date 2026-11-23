@@ -17,8 +17,32 @@
   @media(max-width:940px){.layout{grid-template-columns:1fr}.preview{position:static}.paper{min-height:0}.intro{align-items:start}}@media(max-width:475px){.masthead{padding:13px 14px}.identity{gap:6px}.locale>span{display:none}.fields{grid-template-columns:1fr}.panel{padding:15px}.paper-wrap{padding:9px}.paper{padding:12px}.offer-table th,.offer-table td{font-size:.79rem}.offer-table td:first-child small{font-size:.77rem}}
   .tabs,.actions,.product-picker,.groups{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.tabs{margin:0 0 16px}.secondary{background:white;color:var(--brand);border-color:#adc2dd}.secondary:hover{background:var(--blue-soft)}.tabs .secondary[aria-pressed="true"],.groups button[aria-pressed="true"]{background:var(--brand);color:white}.groups{margin:12px 0}.product-picker label{flex:1 1 170px}.product-picker button{align-self:end}.group-fields{border:0;padding:0;margin:0;min-width:0}.part-price{min-width:105px;width:100%;font-size:.85rem}.component .part-price input{width:100%;height:auto;margin:0}.component{grid-template-columns:minmax(0,1fr) minmax(106px,30%)}.component small{display:block;color:var(--muted);font-size:.78rem}.demo-contact{margin-top:12px}.list{display:grid;gap:8px;margin-top:12px}.record{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px;border:1px solid var(--line);border-radius:7px}.record small{display:block;color:var(--muted);font-size:.86rem}.record .actions button{font-size:.85rem}.total strong{color:var(--brand)}.summary{background:var(--blue-soft);padding:12px;border-radius:7px;margin-top:10px}.summary .total{margin-top:5px;padding-top:5px}.pending{color:#7e2d16}.doc-totals{margin-top:9px;display:grid;gap:4px}.doc-totals p{display:flex;justify-content:space-between;gap:8px}.paper tr{break-inside:avoid}.toolbar{flex-wrap:wrap}button:disabled{opacity:.55;cursor:not-allowed}.empty{color:var(--muted);padding:8px 0}.panel .actions{margin-top:12px}
   #configuration{margin-top:16px;padding-top:14px;border-top:1px solid var(--line)}.group-fields>legend{margin-bottom:10px}.record strong{overflow-wrap:anywhere}
+  @media screen{
+    .masthead{padding:8px max(18px,calc((100vw - 1520px)/2))}.identity img{width:126px;height:39px}
+    main{max-width:1560px;padding:16px 18px 36px;font-size:.875rem}
+    .intro{padding:21px 24px;margin-bottom:13px;background:radial-gradient(ellipse at 88% 100%,#164d85 0%,transparent 65%),linear-gradient(105deg,#071322,#0b2e55)}
+    h1{font-size:clamp(1.65rem,3vw,2.05rem)}.intro p{margin-top:4px}.tabs{margin-bottom:12px}
+    .layout{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr) minmax(240px,.65fr);gap:14px}
+    .panel{padding:14px;margin-bottom:10px}.panel h2,.preview h2{font-size:1rem}.panel h2{margin-bottom:9px}
+    .fields{gap:8px 10px}label>input,label>select,label>textarea{margin-top:3px}input,select,textarea{padding-block:5px}
+    button{padding:6px 9px}.record{padding:8px}.panel .actions,.list,.demo-contact{margin-top:8px}
+    .toolbar{padding:9px 12px}.paper-wrap{padding:12px}.paper{padding:clamp(14px,1.6vw,23px);min-height:340px}.meta{margin:11px 0;gap:7px 12px}
+    .doc-section{margin-top:12px}.doc-footer{margin-top:13px}.dochead h3{font-size:clamp(1.1rem,1.8vw,1.4rem)}
+    .client-dash{min-width:0}.dash-card{background:#fff;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;overflow:hidden}
+    .dash-body{padding:12px}.dash-card h2{font-size:1rem}.dash-heading{background:linear-gradient(115deg,#071d36,#10477b);color:#fff;padding:11px 12px}
+    .dash-heading p{color:#e0ebfb;font-size:.8rem;margin-top:3px;overflow-wrap:anywhere}
+    .dash-kpis{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+    .dash-kpi{background:#eaf2fb;border-radius:7px;padding:8px;min-width:0}
+    .dash-kpi strong{display:block;color:var(--brand);font-size:1.14rem;font-variant-numeric:tabular-nums}
+    .dash-money{display:grid;gap:6px}.dash-money dt,.dash-kpi span{color:var(--muted);font-size:.8rem}
+    .dash-money dd{margin:0;font-weight:700;overflow-wrap:anywhere}.dash-map{display:block;width:100%;height:220px;border:0;background:#eaf2fb}
+    .dash-card .actions{margin-top:8px}.dash-card a{color:var(--brand);font-weight:700}
+    #dash-address{overflow-wrap:anywhere}.dash-latest{margin-top:8px;display:grid;gap:3px}.dash-latest strong{overflow-wrap:anywhere}
+  }
+  @media screen and (max-width:1150px){.layout{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.client-dash{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.preview{position:static}}
+  @media screen and (max-width:740px){.layout,.client-dash{grid-template-columns:1fr}.masthead,main{padding-inline:12px}.intro{padding:15px}.paper{min-height:0}}
   @page{size:A4;margin:17mm}
-  @media print{body,main,.paper-wrap,.paper{background:#fff}.masthead,.intro,.tabs,.editor,.toolbar,.status,.history{display:none!important}main,.layout,.preview,.paper-wrap,.paper{display:block;position:static;margin:0;padding:0;max-width:none;width:100%;min-height:0;border:0;box-shadow:none;overflow:visible}.paper{font-size:10pt;print-color-adjust:exact}.dochead,.meta,.doc-totals,.doc-footer{break-inside:avoid}.dochead h3{font-size:18pt}body[data-printable="false"] main{display:none!important}}
+  @media print{body,main,.paper-wrap,.paper{background:#fff}.masthead,.intro,.tabs,.editor,.toolbar,.status,.history,.client-dash{display:none!important}main,.layout,.preview,.paper-wrap,.paper{display:block;position:static;margin:0;padding:0;max-width:none;width:100%;min-height:0;border:0;box-shadow:none;overflow:visible}.paper{font-size:10pt;print-color-adjust:exact}.dochead,.meta,.doc-totals,.doc-footer{break-inside:avoid}.dochead h3{font-size:18pt}body[data-printable="false"] main{display:none!important}}
 </style>
 </head>
 <body>
@@ -115,6 +139,38 @@
         <footer class="doc-footer"><p data-t="vat">Ceny netto, bez VAT.</p><p class="demo-watermark" data-t="demoPdf">Wersja demonstracyjna. Ceny przykładowe.</p></footer>
       </article><p id="status" class="status" role="status"></p></div>
     </section>
+    <aside class="client-dash" id="client-dash" aria-labelledby="dash-heading">
+      <section class="dash-card">
+        <div class="dash-heading"><h2 id="dash-heading" data-t="clientSummary"></h2><p id="dash-client"></p></div>
+        <div class="dash-body">
+          <div class="dash-kpis">
+            <div class="dash-kpi"><strong id="dash-count"></strong><span data-t="savedQuotes"></span></div>
+            <div class="dash-kpi"><strong id="dash-pending"></strong><span data-t="pending"></span></div>
+          </div>
+          <dl class="dash-money">
+            <div><dt data-t="quotedNet"></dt><dd id="dash-net"></dd></div>
+            <div><dt data-t="quotedMonthly"></dt><dd id="dash-monthly"></dd></div>
+          </dl>
+          <p class="hint" data-t="dashScope"></p>
+        </div>
+      </section>
+      <section class="dash-card">
+        <div class="dash-body">
+          <h2 data-t="clientLocation"></h2><p id="dash-address" class="hint"></p>
+          <div class="actions" id="dash-map-actions" hidden>
+            <button type="button" class="secondary" id="dash-load-map" data-t="showMap"></button>
+            <a id="dash-map-link" target="_blank" rel="noopener noreferrer" data-t="openMaps"></a>
+          </div>
+        </div>
+        <iframe id="dash-map" class="dash-map" referrerpolicy="no-referrer" hidden></iframe>
+      </section>
+      <section class="dash-card">
+        <div class="dash-body">
+          <h2 data-t="latestQuote"></h2>
+          <div id="dash-latest" class="dash-latest"></div>
+        </div>
+      </section>
+    </aside>
   </div>
 </main>
 <script>
@@ -124,6 +180,8 @@ const words = {
     language:'Język interfejsu',quoteLanguage:'Język oferty',title:'Generator ofert GX',demo:'Demo. Używaj przykładowych danych. Historia jest zapisywana tylko w tej przeglądarce.',
     clientSection:'Klient i oferta',client:'Klient',custom:'Dodaj klienta',company:'Nazwa firmy',tax:'NIP / IČO',number:'Numer oferty',validity:'Ważna do',currency:'Waluta',
     findClient:'Szukaj klienta po nazwie, NIP lub miejscowości',noClientMatch:'Nie znaleziono klienta.',
+    clientSummary:'Podsumowanie klienta',savedQuotes:'Zapisane oferty',quotedNet:'Łączna wartość ofert netto',quotedMonthly:'Abonamenty w ofertach / mies.',dashScope:'Oferty zapisane w tej przeglądarce.',
+    clientLocation:'Lokalizacja klienta',noAddress:'Brak adresu klienta.',showMap:'Pokaż mapę',openMaps:'Otwórz w Google Maps',latestQuote:'Ostatnia oferta',
     installation:'Konfiguracja pozycji',vehicle:'Nazwa pozycji',qty:'Ilość',components:'Komponenty i ceny za jednostkę',unitTotal:'Cena za jednostkę',description:'Opis funkcji w języku oferty',
     includeService:'Dodaj miesięczny abonament',servicePerVehicle:'Miesięcznie za jednostkę',preview:'Podgląd oferty',pdf:'Zapisz jako PDF',quote:'Oferta cenowa',
     oneTime:'Opłaty jednorazowe',monthly:'Opłaty miesięczne',item:'Pozycja',count:'Ilość',unitPrice:'Cena jedn.',subtotal:'Razem',service:'Abonament',
@@ -146,6 +204,8 @@ const words = {
     language:'Jazyk aplikace',quoteLanguage:'Jazyk nabídky',title:'Generátor nabídek GX',demo:'Demo. Používej ukázková data. Historie se ukládá jen v tomto prohlížeči.',
     clientSection:'Klient a nabídka',client:'Klient',custom:'Přidat klienta',company:'Název firmy',tax:'IČO / NIP',number:'Číslo nabídky',validity:'Platnost do',currency:'Měna',
     findClient:'Hledat klienta podle názvu, NIP nebo města',noClientMatch:'Žádný odpovídající klient.',
+    clientSummary:'Přehled klienta',savedQuotes:'Uložené nabídky',quotedNet:'Celková hodnota nabídek bez DPH',quotedMonthly:'Paušály v nabídkách / měs.',dashScope:'Nabídky uložené v tomto prohlížeči.',
+    clientLocation:'Poloha klienta',noAddress:'Klient nemá vyplněnou adresu.',showMap:'Zobrazit mapu',openMaps:'Otevřít v Google Maps',latestQuote:'Poslední nabídka',
     installation:'Konfigurace položky',vehicle:'Název položky',qty:'Počet kusů',components:'Komponenty a ceny za jednotku',unitTotal:'Cena za jednotku',description:'Popis funkcí v jazyce nabídky',
     includeService:'Přidat měsíční paušál',servicePerVehicle:'Měsíčně za jednotku',preview:'Náhled nabídky',pdf:'Uložit jako PDF',quote:'Cenová nabídka',
     oneTime:'Jednorázové platby',monthly:'Měsíční platby',item:'Položka',count:'Počet',unitPrice:'Cena za kus',subtotal:'Celkem',service:'Měsíční paušál',
@@ -638,23 +698,73 @@ function historyCard(record,review) {
   const actions=element('div',undefined,'actions');
   actions.append(action(t('duplicate'),()=>copyRecord(record)));
   if (record.status!=='pending') actions.append(action(t('pdf'),()=>printSaved(record)));
-  if (review&&record.status==='pending') actions.append(action(t('approve'),()=>{
+  const role=document.body.dataset.role;
+  if (review&&record.status==='pending'&&(!role||role==='admin')) actions.append(action(t('approve'),()=>{
     if (persist(records.map(item=>item.number===record.number?{...item,status:'approved'}:item))) refresh();
     else window.alert(t('storageError'));
   }));
   item.append(details,actions);
   return item;
 }
+function renderClientDashboard(client,history) {
+  put('dash-client',client.name||'—');
+  put('dash-count',history.length);
+  put('dash-pending',history.filter(record=>record.status==='pending').length);
+  const amounts=new Map();
+  for(const record of history){
+    const {net,monthly}=totals(record);
+    const subtotal=amounts.get(record.currency)??{net:0,monthly:0};
+    subtotal.net+=net;
+    subtotal.monthly+=monthly;
+    amounts.set(record.currency,subtotal);
+  }
+  for(const [id,key] of [['dash-net','net'],['dash-monthly','monthly']]){
+    put(id,[...amounts].map(([currency,total])=>money(total[key],uiLang(),currency)).join(' · ')||'—');
+  }
+  const latest=history[0];
+  const latestCard=el('dash-latest');
+  latestCard.replaceChildren();
+  if(latest) {
+    latestCard.append(element('strong',latest.number),
+      element('span',[dateText(latest.date),money(totals(latest).net,uiLang(),latest.currency)].join(' · ')),
+      element('span',t(latest.status),'hint'),
+      action(t('duplicate'),()=>copyRecord(latest)));
+  } else {
+    latestCard.append(element('p',t('none'),'hint'));
+  }
+  const address=client.address;
+  const map=el('dash-map');
+  put('dash-address',address||t('noAddress'));
+  el('dash-map-actions').hidden=!address;
+  map.title=t('clientLocation');
+  if(map.dataset.address!==address){
+    map.hidden=true;
+    map.removeAttribute('src');
+    map.dataset.address=address;
+    el('dash-load-map').hidden=false;
+  }
+  if(address) el('dash-map-link').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(address);
+  else el('dash-map-link').removeAttribute('href');
+}
+el('dash-load-map').addEventListener('click',()=>{
+  const map=el('dash-map');
+  if(!map.dataset.address) return;
+  map.src='https://maps.google.com/maps?output=embed&z=14&q='+encodeURIComponent(map.dataset.address);
+  map.hidden=false;
+  el('dash-load-map').hidden=true;
+});
 function renderHistory() {
   const filters=clients().map(client=>[clientKey(client),client.name]);
   replaceOptions(el('history-client'),[['',t('all')],...filters]);
   const filter=clients().find(client=>clientKey(client)===el('history-client').value);
   const all=records.filter(record=>!filter||sameClient(record.client,filter)).map(record=>historyCard(record,true));
   const current=currentClient();
-  const old=records.filter(record=>sameClient(record.client,current)).map(record=>historyCard(record,false));
+  const clientHistory=records.filter(record=>sameClient(record.client,current));
+  const old=clientHistory.map(record=>historyCard(record,false));
   el('history-list').replaceChildren(...(all.length?all:[element('p',t('none'),'empty')]));
   el('customer-records').replaceChildren(...(old.length?old:[element('p',t('none'),'empty')]));
   el('client-history').hidden=!current.name&&!current.tax;
+  renderClientDashboard(current,clientHistory);
 }
 function renderGroup() {
   const group=editingItem;
