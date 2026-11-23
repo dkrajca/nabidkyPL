@@ -151,7 +151,7 @@
           <label><span data-t="validity">Ważna do</span><input id="date" type="date" required></label>
           <label><span data-t="currency">Waluta</span><select id="currency"><option>PLN</option><option>CZK</option></select></label>
           <label><span data-t="quoteLanguage">Język oferty</span><select id="quote-language"><option value="pl">PL · Polski</option><option value="cs">CZ · Čeština</option></select></label>
-          <label><span data-t="salesperson"></span><select id="salesperson"><option>Demo Sales 1</option><option>Demo Sales 2</option></select></label>
+          <label><span data-t="salesperson"></span><select id="salesperson"><option>Paweł Płoński</option><option>Łukasz Tkaczyk</option><option>Grzegorz Tomaszek</option><option>Daniel Krajča</option></select></label>
         </div>
         <div class="demo-contact" id="client-history"><h3 data-t="clientHistory"></h3><div class="list" id="customer-records"></div></div>
       </section>
@@ -238,11 +238,11 @@ const words = {
     findClient:'Szukaj klienta po nazwie, NIP lub miejscowości',noClientMatch:'Nie znaleziono klienta.',
     clientSummary:'Podsumowanie klienta',savedQuotes:'Zapisane oferty',quotedNet:'Łączna wartość ofert netto',quotedMonthly:'Abonamenty w ofertach / mies.',dashScope:'Oferty zapisane w tej przeglądarce.',
     clientLocation:'Lokalizacja klienta',noAddress:'Brak adresu klienta.',openMaps:'Otwórz w Google Maps',drivingRoute:'Trasa autem',distanceFrom:'od Frýdku-Místku w linii prostej',distanceUnavailable:'Brak przybliżonej odległości dla tego kodu pocztowego.',latestQuote:'Ostatnia oferta',
-    installation:'Konfiguracja pozycji',vehicle:'Nazwa pozycji',qty:'Ilość',components:'Komponenty i ceny za jednostkę',unitTotal:'Cena za jednostkę',description:'Opis funkcji w języku oferty',
+    installation:'Konfiguracja pozycji',vehicle:'Nazwa pozycji',qty:'Ilość',components:'Komponenty i ceny za jednostkę',unitTotal:'Cena za jednostkę',description:'Uwagi (opcjonalnie)',
     includeService:'Dodaj miesięczny abonament',servicePerVehicle:'Miesięcznie za jednostkę',preview:'Podgląd oferty',pdf:'Zapisz jako PDF',quote:'Oferta cenowa',
     oneTime:'Przedmiot oferty i specyfikacja cenowa',monthly:'Miesięczny abonament',item:'Pozycja',count:'Ilość',unitPrice:'Cena jedn.',subtotal:'Razem',service:'Abonament',
     docNotes:'Uwagi',docIssued:'Data',docOwner:'Odpowiedzialny',docAdditional:'Dodatkowe informacje',vat:'Ceny netto, bez VAT.',demoPdf:'Wersja demonstracyjna. Ceny przykładowe.',newQuote:'Nowa oferta',history:'Historia',historyHint:'Historia lokalna. Zatwierdzanie zniżek jest symulacją.',
-    salesperson:'Handlowiec (demo)',clientHistory:'Poprzednie oferty klienta',quoteItems:'Pozycje oferty',addProduct:'+ Dodaj pozycję',removeProduct:'Usuń',pickProduct:'Wybierz produkt',
+    salesperson:'Handlowiec',clientHistory:'Poprzednie oferty klienta',quoteItems:'Pozycje oferty',addProduct:'+ Dodaj pozycję',removeProduct:'Usuń',pickProduct:'Wybierz produkt',
     commitItem:'Dodaj do oferty',updateItem:'Zapisz pozycję',cancelItem:'Anuluj',editItem:'Edytuj',nameRequired:'Wpisz nazwę pozycji.',
     minPart:'Minimum',sellPrice:'Cena ofertowa',discount:'Rabat',discountAmount:'Łączny rabat jednorazowy',minimum:'Minimum jednorazowe',netTotal:'Razem jednorazowo netto',
     below:'Cena końcowa jest poniżej minimum. Oferta wymaga zgody kierownika.',invalidDiscount:'Rabat nie może przekraczać wartości jednorazowej oferty.',
@@ -262,11 +262,11 @@ const words = {
     findClient:'Hledat klienta podle názvu, NIP nebo města',noClientMatch:'Žádný odpovídající klient.',
     clientSummary:'Přehled klienta',savedQuotes:'Uložené nabídky',quotedNet:'Celková hodnota nabídek bez DPH',quotedMonthly:'Paušály v nabídkách / měs.',dashScope:'Nabídky uložené v tomto prohlížeči.',
     clientLocation:'Poloha klienta',noAddress:'Klient nemá vyplněnou adresu.',openMaps:'Otevřít v Google Maps',drivingRoute:'Trasa autem',distanceFrom:'z Frýdku-Místku vzdušnou čarou',distanceUnavailable:'Pro toto PSČ není dostupná orientační vzdálenost.',latestQuote:'Poslední nabídka',
-    installation:'Konfigurace položky',vehicle:'Název položky',qty:'Počet kusů',components:'Komponenty a ceny za jednotku',unitTotal:'Cena za jednotku',description:'Popis funkcí v jazyce nabídky',
+    installation:'Konfigurace položky',vehicle:'Název položky',qty:'Počet kusů',components:'Komponenty a ceny za jednotku',unitTotal:'Cena za jednotku',description:'Poznámka (volitelná)',
     includeService:'Přidat měsíční paušál',servicePerVehicle:'Měsíčně za jednotku',preview:'Náhled nabídky',pdf:'Uložit jako PDF',quote:'Cenová nabídka',
     oneTime:'Jednorázové platby',monthly:'Měsíční platby',item:'Položka',count:'Počet',unitPrice:'Cena za kus',subtotal:'Celkem',service:'Měsíční paušál',
     docNotes:'Poznámky',docIssued:'Datum',docOwner:'Odpovídá',docAdditional:'Doplňující informace',vat:'Ceny jsou uvedeny bez DPH.',demoPdf:'Ukázková nabídka. Testovací ceny.',newQuote:'Nová nabídka',history:'Historie',historyHint:'Historie v tomto prohlížeči. Schválení slevy je simulace.',
-    salesperson:'Obchodník (demo)',clientHistory:'Předchozí nabídky klienta',quoteItems:'Položky nabídky',addProduct:'+ Přidat položku',removeProduct:'Smazat',pickProduct:'Vyber produkt',
+    salesperson:'Obchodník',clientHistory:'Předchozí nabídky klienta',quoteItems:'Položky nabídky',addProduct:'+ Přidat položku',removeProduct:'Smazat',pickProduct:'Vyber produkt',
     commitItem:'Přidat do nabídky',updateItem:'Uložit položku',cancelItem:'Zrušit',editItem:'Upravit',nameRequired:'Zadej název položky.',
     minPart:'Minimum',sellPrice:'Prodejní cena',discount:'Sleva',discountAmount:'Celková jednorázová sleva',minimum:'Jednorázová minimální cena',netTotal:'Jednorázově celkem bez DPH',
     below:'Výsledná cena je pod minimem. Nabídka vyžaduje schválení vedoucím.',invalidDiscount:'Sleva nesmí překročit jednorázovou hodnotu nabídky.',
@@ -665,9 +665,12 @@ function totals(record) {
   }
   return {gross,floor,monthly,units,net:gross-record.discount};
 }
+function groupNote(group,lang) {
+  return group.descriptions[lang] ?? loc(products[group.product]?.scope ?? '',lang);
+}
 function draft() {
   const snapshots=groups.map(group=>({
-    product:group.product,label:group.label,qty:group.qty,descriptions:{...group.descriptions},service:group.serviceEnabled?group.service:null,
+    product:group.product,label:group.label,qty:group.qty,descriptions:{pl:groupNote(group,'pl'),cs:groupNote(group,'cs')},service:group.serviceEnabled?group.service:null,
     items:Object.entries(group.prices).map(([id,price])=>({id,price,floor:minimum(id)}))
   }));
   return {number:el('number').value,date:today(),validity:el('date').value,client:currentClient(),salesperson:el('salesperson').value,
@@ -713,8 +716,7 @@ function renderPaper(record) {
     const price=group.items.reduce((sum,item)=>sum+item.price,0);
     const row=element('tr');
     const name=element('td');
-    const title=[loc(products[group.product].scope,lang),group.label].filter(Boolean).join(' · ');
-    name.append(element('strong',title));
+    name.append(element('strong',group.label));
     row.append(name,element('td',group.qty),element('td',format(price)),element('td',format(price*group.qty)),element('td',group.descriptions[lang]));
     items.push(row);
     if(group.service!==null) {
@@ -910,7 +912,7 @@ function renderGroup() {
   el('quantity').value=group.qty??'';
   el('item-options').hidden=!group.product;
   put('commit-item',t(editingIndex<0?'commitItem':'updateItem'));
-  el('description').value=group.descriptions[quoteLang()];
+  el('description').value=groupNote(group,quoteLang());
   el('description').lang=quoteLang();
   el('service-enabled').checked=group.serviceEnabled;
   el('service-price').value=group.service===null?'':group.service/100;
@@ -951,7 +953,7 @@ function openItem(index=-1) {
   if(editingItem) return;
   editingIndex=index;
   editingItem=index<0?
-    {product:'',label:'',qty:1,descriptions:{pl:'',cs:''},serviceEnabled:true,service:monthDefault(),prices:{}}:
+    {product:'',label:'',qty:1,descriptions:{},serviceEnabled:true,service:monthDefault(),prices:{}}:
     structuredClone(groups[index]);
   put('item-status','');
   renderGroup();
