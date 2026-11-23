@@ -122,7 +122,7 @@
   .history-table tbody :is(td,th){padding:9px 10px;vertical-align:top;border-top:1px solid #e1e8f0}
   .history-table tbody tr:nth-child(even){background:#f7faff}
   .history-table tbody :is(td,th) small{display:block;color:#526881;font-size:.75rem;font-weight:450;overflow-wrap:anywhere}
-  .history-table :is(td,th):is(:nth-child(4),:nth-child(5)){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .history-table :is(td,th):is(:nth-child(5),:nth-child(6)){text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
   .history-company{min-width:150px}
   .history-detail summary{cursor:pointer;color:#164c80;font-weight:650;white-space:nowrap}
   .history-detail-body{min-width:140px;margin-top:5px;color:#354b62;font-size:.8rem}
@@ -136,7 +136,7 @@
   .history-sidebar{position:sticky;top:12px}
   @media(min-width:981px){.history-sidebar{max-height:calc(100dvh - 24px);overflow-y:auto;scrollbar-width:thin}}
   .history-filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(135px,.45fr);gap:10px;margin-bottom:8px}
-  .history-workspace .history-table{min-width:570px}
+  .history-workspace .history-table{min-width:690px}
   .history-workspace .history-table thead th:last-child{text-align:left}
   .history-row-open.secondary{display:block;width:100%;text-align:left;padding:0;border:0;background:none;color:#153d67;font-weight:750;overflow-wrap:anywhere}
   .history-row-open:hover{text-decoration:underline}
@@ -164,6 +164,25 @@
   @media(max-width:980px){.history-workspace{grid-template-columns:minmax(0,1fr)}.history-sidebar{position:static}.history-back{display:inline-block}}
   @media(max-width:460px){.history-filters{grid-template-columns:minmax(0,1fr)}}
 
+  .history-sort{font:inherit;background:transparent;border:0;padding:0;color:inherit;white-space:nowrap}
+  .history-sort:hover,.history-sort:focus-visible{background:transparent;text-decoration:underline}
+  .history-sort span{margin-inline-start:6px;color:#2c6caf}
+  .archive-charts{display:grid;gap:8px}
+  .history-sidebar .archive-charts .archive-trend{min-width:0;margin:0}
+  .archive-net-trend svg{display:block;width:100%;min-height:100px}
+  .archive-net-trend svg text{fill:#40546a;font:10px system-ui,sans-serif}
+  .net-grid{stroke:#d3e4da}
+  .net-line{fill:none;stroke:#237352;stroke-width:2}
+  .net-point{fill:#237352;stroke:#fff;stroke-width:1}
+  .net-point:focus{stroke:#153d67;stroke-width:2}
+  .history-stage-counts li{overflow-wrap:anywhere}
+  .history-stage-badge{white-space:normal}
+  @media(min-width:1350px){
+    .history-workspace{grid-template-columns:minmax(0,1fr) minmax(475px,39%)}
+    .archive-charts{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .archive-bars{gap:4px}
+    .archive-bars li{flex-basis:30px;font-size:.65rem}
+  }
 </style>
 </head>
 <body>
@@ -983,9 +1002,27 @@ const archiveLabels = {
     authored:'Autor niepodany w dokumencie',folder:'data folderu',file:'data utworzenia PDF',items:'Pozycje cenowe',valid:'Ważna do'}
 };
 const historyLayout = {
-  cs:{company:'Klient / nabídka',date:'Datum',seller:'Obchodník',units:'Počet ks',price:'Celková cena',details:'Detaily',saved:'Nabídky z tohoto prohlížeče',trend:'Dokumenty podle měsíce',noDate:'Bez data'},
-  pl:{company:'Klient / oferta',date:'Data',seller:'Handlowiec',units:'Liczba szt.',price:'Cena całkowita',details:'Szczegóły',saved:'Oferty z tej przeglądarki',trend:'Dokumenty według miesiąca',noDate:'Bez daty'}
+  cs:{product:'Produkt',company:'Klient / nabídka',date:'Datum',seller:'Obchodník',units:'Počet ks',price:'Celková cena',details:'Detaily',saved:'Nabídky z tohoto prohlížeče',trend:'Dokumenty podle měsíce',netTrend:'Hodnota nabídek bez DPH podle měsíce',noDate:'Bez data'},
+  pl:{product:'Produkt',company:'Klient / oferta',date:'Data',seller:'Handlowiec',units:'Liczba szt.',price:'Cena całkowita',details:'Szczegóły',saved:'Oferty z tej przeglądarki',trend:'Dokumenty według miesiąca',netTrend:'Wartość ofert netto według miesiąca',noDate:'Bez daty'}
 };
+let historySort={key:'date',direction:'descending'};
+function sortHistoryRows(rows) {
+  const {key,direction}=historySort;
+  const order=direction==='ascending'?1:-1;
+  const collator=new Intl.Collator(uiLang(),{numeric:true,sensitivity:'base'});
+  const currencyOrder=new Intl.Collator('en');
+  return [...rows].sort((a,b)=>{
+    const first=a[key], second=b[key];
+    const firstMissing=first==null||first==='', secondMissing=second==null||second==='';
+    if(firstMissing!==secondMissing) return firstMissing?1:-1;
+    if(!firstMissing) {
+      if(key==='amount'&&a.currency!==b.currency) return currencyOrder.compare(a.currency,b.currency);
+      const comparison=typeof first==='number'?first-second:collator.compare(first,second);
+      if(comparison) return order*comparison;
+    }
+    return (b.date||'').localeCompare(a.date||'')||collator.compare(a.number,b.number);
+  });
+}
 function makeHistoryTable(rows, heading) {
   const ui=historyLayout[uiLang()];
   const shell=element('div',undefined,'history-table-wrap');
@@ -994,13 +1031,30 @@ function makeHistoryTable(rows, heading) {
   shell.setAttribute('aria-label',heading);
   const table=element('table',undefined,'history-table');
   const header=table.createTHead().insertRow();
-  for (const label of [ui.company,ui.date,ui.seller,ui.units,ui.price,historyUi[uiLang()].stage]) {
-    const cell=element('th',label);
+  const columns=[['client',ui.company],['date',ui.date],['seller',ui.seller],['product',ui.product],['units',ui.units],['amount',ui.price],['stageLabel',historyUi[uiLang()].stage]];
+  for (const [key,label] of columns) {
+    const cell=element('th');
     cell.scope='col';
+    const sort=element('button',label,'history-sort');
+    sort.type='button';
+    sort.dataset.sort=key;
+    const active=historySort.key===key;
+    if(active) cell.setAttribute('aria-sort',historySort.direction);
+    const arrow=element('span',active?(historySort.direction==='ascending'?'↑':'↓'):'↕');
+    arrow.setAttribute('aria-hidden','true');
+    sort.append(arrow);
+    sort.addEventListener('click',()=>{
+      const direction=active?(historySort.direction==='ascending'?'descending':'ascending'):
+        (['date','units','amount'].includes(key)?'descending':'ascending');
+      historySort={key,direction};
+      renderHistory();
+      el('history-list').querySelector('[data-sort="'+key+'"]').focus({preventScroll:true});
+    });
+    cell.append(sort);
     header.append(cell);
   }
   const body=table.createTBody();
-  for (const row of [...rows].sort((a,b)=>(b.date||'').localeCompare(a.date||''))) {
+  for (const row of sortHistoryRows(rows)) {
     const line=body.insertRow();
     const title=element('th',undefined,'history-company');
     title.scope='row';
@@ -1019,6 +1073,7 @@ function makeHistoryTable(rows, heading) {
     date.append(element('span',row.date?dateText(row.date):'—'));
     if (row.dateSource) date.append(element('small',row.dateSource));
     line.insertCell().textContent=row.seller||'—';
+    line.insertCell().textContent=row.product;
     line.insertCell().textContent=row.units??'—';
     const price=line.insertCell();
     price.append(element('strong',row.price));
@@ -1058,6 +1113,67 @@ function historyTrend(rows) {
   chart.append(element('h3',ui.trend),bars);
   return chart;
 }
+function historyNetTrend(rows) {
+  const ui=historyLayout[uiLang()];
+  const totals=new Map();
+  for (const row of rows) {
+    const month=row.date?.slice(0,7)||'';
+    totals.set(month,(totals.get(month)??0)+row.amount);
+  }
+  const dates=[...totals.keys()].filter(Boolean).sort();
+  const chart=element('section',undefined,'archive-trend archive-net-trend');
+  const title=ui.netTrend+' (PLN)';
+  chart.append(element('h3',title));
+  const formatter=new Intl.DateTimeFormat(uiLang(),{month:'short',year:'2-digit',timeZone:'UTC'});
+  const axis=new Intl.NumberFormat(uiLang(),{notation:'compact',maximumFractionDigits:1});
+  const svg=(tag,attrs={})=>{
+    const node=document.createElementNS('http://www.w3.org/2000/svg',tag);
+    for (const [name,value] of Object.entries(attrs)) node.setAttribute(name,value);
+    return node;
+  };
+  if(dates.length) {
+    const graph=svg('svg',{viewBox:'0 0 260 125',role:'img','aria-label':title});
+    const max=Math.max(1,...dates.map(month=>totals.get(month)));
+    const points=dates.map((month,index)=>({
+      x:38+index*207/Math.max(1,dates.length-1),y:92-totals.get(month)/max*75,
+      label:formatter.format(new Date(month+'-01T00:00:00Z')),value:totals.get(month)
+    }));
+    for(const tick of [0,.5,1]) {
+      const y=92-tick*75;
+      graph.append(svg('line',{x1:38,y1:y,x2:249,y2:y,class:'net-grid'}));
+      const label=svg('text',{x:34,y:y+3,'text-anchor':'end'});
+      label.textContent=axis.format(max*tick/100);
+      graph.append(label);
+    }
+    graph.append(svg('polyline',{points:points.map(({x,y})=>x+','+y).join(' '),class:'net-line'}));
+    for(const [index,{x,y,label,value}] of points.entries()) {
+      const circle=svg('circle',{cx:x,cy:y,r:3.5,tabindex:0,class:'net-point'});
+      const exact=svg('title');
+      exact.textContent=label+' · '+money(value,uiLang(),'PLN');
+      circle.setAttribute('aria-label',exact.textContent);
+      circle.append(exact);
+      graph.append(circle);
+      if(index===0||index===points.length-1||index%Math.ceil(points.length/4)===0) {
+        const tick=svg('text',{x,y:111,'text-anchor':index===0?'start':index===points.length-1?'end':'middle'});
+        tick.textContent=label;
+        graph.append(tick);
+      }
+    }
+    chart.append(graph);
+  }
+  if(totals.has('')) chart.append(element('p',ui.noDate+' · '+money(totals.get(''),uiLang(),'PLN'),'hint'));
+  return chart;
+}
+function historyProductNames(keys) {
+  return [...new Set(keys)].filter(key=>Object.hasOwn(products,key))
+    .map(key=>loc(products[key].name,uiLang())).join(', ');
+}
+function archivedProductKeys(row) {
+  if (Array.isArray(row.productKeys)) return row.productKeys;
+  const keys={'GX Store':'store','ActiveSafety':'safety','GX Truck':'truck','GX Fleet':'fleet'};
+  if (/GX Store.*czytnik UWB|GX Store - uzbrojenie wózka/i.test(row.title)) return ['store'];
+  return (row.product??'').split(' + ').map(label=>keys[label]).filter(Boolean);
+}
 function archivedHistoryRow(row) {
   const labels=archiveLabels[uiLang()];
   const ui=historyLayout[uiLang()];
@@ -1075,7 +1191,7 @@ function archivedHistoryRow(row) {
   }
   details.append(element('summary',ui.details),content);
   return {client:row.client,number:row.number||row.title,date:row.date,dateSource:labels[row.dateSource],
-    seller:row.salesperson,units:row.units,price:row.amount===null?'—':money(row.amount,uiLang(),row.currency),
+    seller:row.salesperson,product:historyProductNames(archivedProductKeys(row)),units:row.units,amount:row.amount,currency:row.currency,price:row.amount===null?'—':money(row.amount,uiLang(),row.currency),
     basis:labels.basis[row.basis],details};
 }
 function savedHistoryRow(record) {
@@ -1086,15 +1202,15 @@ function savedHistoryRow(record) {
   if (total.monthly) content.append(element('p',t('monthly')+' · '+money(total.monthly,uiLang(),record.currency)));
   content.append(historyActions(record,true));
   details.append(element('summary',historyLayout[uiLang()].details),content);
-  return {client:record.client.name,number:record.number,date:record.date,seller:record.salesperson,units:total.units,
+  return {client:record.client.name,number:record.number,date:record.date,seller:record.salesperson,product:historyProductNames(record.groups.map(group=>group.product)),units:total.units,amount:total.net,currency:record.currency,
     price:money(total.net,uiLang(),record.currency),basis:archiveLabels[uiLang()].basis.net,details};
 }
 
-const dealStages=['inProgress','lost','won','deferred','unknown'];
+const dealStages=['inProgress','won','lost','deferred','unknown'];
 const historyStageKey='gx-quote-stages-v1';
 const historyUi={
-  cs:{stage:'Obchodní stav',allStages:'Všechny stavy',inProgress:'V řešení',lost:'Ztraceno',won:'Zrealizováno',deferred:'Odsunuto',unknown:'Neurčeno',summary:'Nabídky podle stavu',back:'Zpět k nabídkám',lookup:'Vyhledat firmu na mapě',archive:'Archivní nabídka',saved:'Uložená nabídka',addressMissing:'U této firmy nemáme uloženou adresu.'},
-  pl:{stage:'Status handlowy',allStages:'Wszystkie statusy',inProgress:'W toku',lost:'Przegrana',won:'Zrealizowana',deferred:'Odłożona',unknown:'Nieustalony',summary:'Oferty według statusu',back:'Wróć do ofert',lookup:'Wyszukaj firmę na mapie',archive:'Oferta archiwalna',saved:'Zapisana oferta',addressMissing:'Nie zapisano adresu tej firmy.'}
+  cs:{stage:'Obchodní stav',allStages:'Všechny stavy',inProgress:'V řešení',lost:'Ztraceno',won:'Realizováno',deferred:'Přesunuto na později',unknown:'Neurčeno',summary:'Nabídky podle stavu',back:'Zpět k nabídkám',lookup:'Vyhledat firmu na mapě',archive:'Archivní nabídka',saved:'Uložená nabídka',addressMissing:'U této firmy nemáme uloženou adresu.'},
+  pl:{stage:'Status handlowy',allStages:'Wszystkie statusy',inProgress:'W toku',lost:'Przegrana',won:'Zrealizowana',deferred:'Przełożona na później',unknown:'Nieustalony',summary:'Oferty według statusu',back:'Wróć do ofert',lookup:'Wyszukaj firmę na mapie',archive:'Oferta archiwalna',saved:'Zapisana oferta',addressMissing:'Nie zapisano adresu tej firmy.'}
 };
 let dealStates=new Map();
 try { dealStates=new Map(JSON.parse(localStorage.getItem(historyStageKey))??[]); } catch {}
@@ -1113,7 +1229,7 @@ function historyDashboardRows(filter,clientList) {
     const key=historyKey('saved',row.number);
     return {...savedHistoryRow(row),key,stage:stageOf(key,row.dealStage==='inProgress'?'inProgress':'unknown'),clientInfo:row.client};
   });
-  return [...archived,...saved];
+  return [...archived,...saved].map(row=>({...row,stageLabel:historyUi[uiLang()][row.stage]}));
 }
 
 function historyStageCard(rows) {
@@ -1215,10 +1331,7 @@ function renderArchiveSummary(rows,target,showTrend) {
   const clean=rows.filter(row=>row.status==='archive'&&row.amount!==null);
   const values=[
     ['count',rows.length],
-    ...['net','gross'].map(basis=>{
-      const entries=clean.filter(row=>row.basis===basis);
-      return [basis,entries.length?money(entries.reduce((sum,row)=>sum+row.amount,0),uiLang(),'PLN'):null];
-    }),
+    ['net',clean.some(row=>row.basis==='net')?money(clean.filter(row=>row.basis==='net').reduce((sum,row)=>sum+row.amount,0),uiLang(),'PLN'):null],
     ['units',clean.some(row=>row.units!==null)?clean.reduce((sum,row)=>sum+(row.units??0),0):null],
     ['monthly',clean.some(row=>row.monthly!==null)?money(clean.reduce((sum,row)=>sum+(row.monthly??0),0),uiLang(),'PLN'):null]
   ];
@@ -1231,7 +1344,13 @@ function renderArchiveSummary(rows,target,showTrend) {
     stats.append(card);
   }
   target.append(element('h2',labels.title),stats);
-  if (showTrend) target.append(historyTrend(rows));
+  if (showTrend) {
+    const charts=element('div',undefined,'archive-charts');
+    charts.append(historyTrend(rows));
+    const net=clean.filter(row=>row.basis==='net');
+    if(net.length) charts.append(historyNetTrend(net));
+    target.append(charts);
+  }
   target.append(element('p',labels.note,'hint'));
 
 }
