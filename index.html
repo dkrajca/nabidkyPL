@@ -89,6 +89,7 @@
     .paper tr{break-inside:avoid}
     .paper .doc-section h4{break-after:avoid}
   }
+  .secondary.remove-item{color:#9b3425;border-color:#e5b8b1}.secondary.remove-item:hover:enabled{background:#fbeeea}
 </style>
 </head>
 <body>
@@ -129,7 +130,6 @@
             <div class="actions">
               <button id="commit-item" type="button" data-t="commitItem"></button>
               <button id="cancel-item" class="secondary" type="button" data-t="cancelItem"></button>
-              <button id="remove-product" class="secondary" type="button" data-t="removeProduct" hidden></button>
             </div>
             <p id="item-status" class="status" role="status"></p>
           </fieldset>
@@ -242,7 +242,7 @@ const words = {
     includeService:'Dodaj miesięczny abonament',servicePerVehicle:'Miesięcznie za jednostkę',preview:'Podgląd oferty',pdf:'Zapisz jako PDF',quote:'Oferta cenowa',
     oneTime:'Przedmiot oferty i specyfikacja cenowa',monthly:'Miesięczny abonament',item:'Pozycja',count:'Ilość',unitPrice:'Cena jedn.',subtotal:'Razem',service:'Abonament',
     docNotes:'Uwagi',docIssued:'Data',docOwner:'Odpowiedzialny',docAdditional:'Dodatkowe informacje',vat:'Ceny netto, bez VAT.',demoPdf:'Wersja demonstracyjna. Ceny przykładowe.',newQuote:'Nowa oferta',history:'Historia',historyHint:'Historia lokalna. Zatwierdzanie zniżek jest symulacją.',
-    salesperson:'Handlowiec (demo)',clientHistory:'Poprzednie oferty klienta',quoteItems:'Pozycje oferty',addProduct:'+ Dodaj pozycję',removeProduct:'Usuń pozycję',pickProduct:'Wybierz produkt',
+    salesperson:'Handlowiec (demo)',clientHistory:'Poprzednie oferty klienta',quoteItems:'Pozycje oferty',addProduct:'+ Dodaj pozycję',removeProduct:'Usuń',pickProduct:'Wybierz produkt',
     commitItem:'Dodaj do oferty',updateItem:'Zapisz pozycję',cancelItem:'Anuluj',editItem:'Edytuj',nameRequired:'Wpisz nazwę pozycji.',
     minPart:'Minimum',sellPrice:'Cena ofertowa',discount:'Rabat',discountAmount:'Łączny rabat jednorazowy',minimum:'Minimum jednorazowe',netTotal:'Razem jednorazowo netto',
     below:'Cena końcowa jest poniżej minimum. Oferta wymaga zgody kierownika.',invalidDiscount:'Rabat nie może przekraczać wartości jednorazowej oferty.',
@@ -266,7 +266,7 @@ const words = {
     includeService:'Přidat měsíční paušál',servicePerVehicle:'Měsíčně za jednotku',preview:'Náhled nabídky',pdf:'Uložit jako PDF',quote:'Cenová nabídka',
     oneTime:'Jednorázové platby',monthly:'Měsíční platby',item:'Položka',count:'Počet',unitPrice:'Cena za kus',subtotal:'Celkem',service:'Měsíční paušál',
     docNotes:'Poznámky',docIssued:'Datum',docOwner:'Odpovídá',docAdditional:'Doplňující informace',vat:'Ceny jsou uvedeny bez DPH.',demoPdf:'Ukázková nabídka. Testovací ceny.',newQuote:'Nová nabídka',history:'Historie',historyHint:'Historie v tomto prohlížeči. Schválení slevy je simulace.',
-    salesperson:'Obchodník (demo)',clientHistory:'Předchozí nabídky klienta',quoteItems:'Položky nabídky',addProduct:'+ Přidat položku',removeProduct:'Odebrat položku',pickProduct:'Vyber produkt',
+    salesperson:'Obchodník (demo)',clientHistory:'Předchozí nabídky klienta',quoteItems:'Položky nabídky',addProduct:'+ Přidat položku',removeProduct:'Smazat',pickProduct:'Vyber produkt',
     commitItem:'Přidat do nabídky',updateItem:'Uložit položku',cancelItem:'Zrušit',editItem:'Upravit',nameRequired:'Zadej název položky.',
     minPart:'Minimum',sellPrice:'Prodejní cena',discount:'Sleva',discountAmount:'Celková jednorázová sleva',minimum:'Jednorázová minimální cena',netTotal:'Jednorázově celkem bez DPH',
     below:'Výsledná cena je pod minimem. Nabídka vyžaduje schválení vedoucím.',invalidDiscount:'Sleva nesmí překročit jednorázovou hodnotu nabídky.',
@@ -890,7 +890,17 @@ function renderGroup() {
     const button=action(t('editItem'),()=>openItem(index));
     button.disabled=Boolean(group);
     button.setAttribute('aria-label',t('editItem')+' · '+(item.label||name));
-    row.append(details,button);
+    const remove=action(t('removeProduct'),()=>{
+      touch();
+      groups.splice(index,1);
+      closeItem();
+    });
+    remove.classList.add('remove-item');
+    remove.disabled=Boolean(group)&&index!==editingIndex;
+    remove.setAttribute('aria-label',t('removeProduct')+' · '+(item.label||name));
+    const controls=element('div',undefined,'actions');
+    controls.append(button,remove);
+    row.append(details,controls);
     return row;
   }));
   if(!group) return;
@@ -899,7 +909,6 @@ function renderGroup() {
   el('product').value=group.product;
   el('quantity').value=group.qty??'';
   el('item-options').hidden=!group.product;
-  el('remove-product').hidden=editingIndex<0;
   put('commit-item',t(editingIndex<0?'commitItem':'updateItem'));
   el('description').value=group.descriptions[quoteLang()];
   el('description').lang=quoteLang();
@@ -1072,11 +1081,6 @@ el('product').addEventListener('change',()=>{
 el('add-product').addEventListener('click',()=>openItem());
 el('commit-item').addEventListener('click',commitItem);
 el('cancel-item').addEventListener('click',closeItem);
-el('remove-product').addEventListener('click',()=>{
-  touch();
-  groups.splice(editingIndex,1);
-  closeItem();
-});
 el('vehicle').addEventListener('input',()=>{editingItem.label=el('vehicle').value;put('item-status','');});
 el('quantity').addEventListener('input',()=>{editingItem.qty=el('quantity').validity.valid?el('quantity').valueAsNumber:null;put('item-status','');});
 el('description').addEventListener('input',()=>{editingItem.descriptions[quoteLang()]=el('description').value;});
